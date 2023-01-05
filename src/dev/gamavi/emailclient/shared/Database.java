@@ -12,7 +12,14 @@ public class Database {
 		return instance;
 	}
 	
-	// todo: implement mysql connection
-	// todo: store currently logged in user
+	private final SQLHelper helper;
+	
+	private Database() {
+		this.helper = new SQLHelper("localhost", 3306, "email_client", "root", "password");
+	}
+
+	public SQLHelper getHelper() {
+		return helper;
+	}
 
 }

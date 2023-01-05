@@ -1,15 +1,21 @@
 package dev.gamavi.emailclient.repository;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+
+import dev.gamavi.emailclient.shared.SQLHelper;
 
 public abstract class AbstractRepository<Type, ID> {
 	
-	protected final Connection connection;
+	private final SQLHelper helper;
 	
-	public AbstractRepository(Connection connection) {
-		this.connection = connection;
+	public AbstractRepository(SQLHelper helper) {
+		this.helper = helper;
+	}
+	
+	public SQLHelper getHelper() {
+		return helper;
 	}
 	
 	public abstract void insert(Type instance);
@@ -20,6 +26,9 @@ public abstract class AbstractRepository<Type, ID> {
 	
 	public abstract List<Type> findAll();
 
-	public abstract Type mapResults(ResultSet rs);
+	/**
+	 * Helps mapping from `ResultSet` to object/instance class.
+	 */
+	public abstract Type mapToObject(ResultSet rs) throws SQLException;
 
 }

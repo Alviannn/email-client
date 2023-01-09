@@ -7,6 +7,7 @@ import java.util.List;
 
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.model.UserBuilder;
+import dev.gamavi.emailclient.shared.Closer;
 import dev.gamavi.emailclient.shared.SQLHelper;
 
 public class UserRepository extends AbstractRepository<User, String> {
@@ -17,7 +18,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 
 	@Override
 	public void insert(User instance) {
-		try {
+		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
 				"INSERT INTO users" +
 				" (email, display_name, password) VALUES (?, ?, ?)",
@@ -27,9 +28,14 @@ public class UserRepository extends AbstractRepository<User, String> {
 				instance.getPassword()
 			);
 			
-			User tmp = this.findOne(instance.getEmail());
-			instance.setCreatedAt(tmp.getCreatedAt());
-			instance.setUpdatedAt(tmp.getUpdatedAt());
+			String afterInsertQuery = "SELECT created_at, updated_at FROM users WHERE email = ?";
+			SQLHelper helper = this.getHelper();
+			
+			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, instance.getEmail()));
+			assert rs.next();
+			
+			instance.setCreatedAt(rs.getTimestamp("created_at"));
+			instance.setUpdatedAt(rs.getTimestamp("updated_at"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -37,7 +43,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 	
 	@Override
 	public void update(User instance) {
-		try {
+		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
 				"UPDATE users SET" +
 				" display_name = ?, password = ?, updated_at = NOW() " +
@@ -47,9 +53,14 @@ public class UserRepository extends AbstractRepository<User, String> {
 				instance.getPassword()
 			);
 			
-			User tmp = this.findOne(instance.getEmail());
-			instance.setUpdatedAt(tmp.getUpdatedAt());
-		} catch (SQLException e) {
+			String afterUpdateQuery = "SELECT updated_at FROM users WHERE email = ?";
+			SQLHelper helper = this.getHelper();
+			
+			ResultSet rs = closer.add(helper.getResults(afterUpdateQuery, instance.getEmail()));
+			assert rs.next();
+			
+			instance.setUpdatedAt(rs.getTimestamp("updated_at"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

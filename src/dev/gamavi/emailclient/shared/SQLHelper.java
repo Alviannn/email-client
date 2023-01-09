@@ -44,23 +44,22 @@ public class SQLHelper {
             throw new RuntimeException("Failed to disconnect MySQL connection");
         }
     }
-
-    public ResultSet getResults(String query, Object... args) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(query);
-
+    
+    public PreparedStatement prepare(String query, Object...args) throws SQLException {
+    	PreparedStatement statement = connection.prepareStatement(query);
         for (int i = 0; i < args.length; i++) {
             statement.setObject(i + 1, args[i]);
         }
 
-        return statement.executeQuery();
+        return statement;
+    }
+
+    public ResultSet getResults(String query, Object... args) throws SQLException {
+        return this.prepare(query, args).executeQuery();
     }
 
     public void execute(String query, Object... args) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            for (int i = 0; i < args.length; i++) {
-                statement.setObject(i + 1, args[i]);
-            }
-
+        try (PreparedStatement statement = this.prepare(query, args)) {
             statement.execute();
         }
     }

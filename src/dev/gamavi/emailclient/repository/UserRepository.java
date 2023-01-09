@@ -19,7 +19,8 @@ public class UserRepository extends AbstractRepository<User, String> {
 	public void insert(User instance) {
 		try {
 			this.getHelper().execute(
-				"INSERT INTO users VALUES (?, ?, ?)",
+				"INSERT INTO users" +
+				" (email, display_name, password) VALUES (?, ?, ?)",
 
 				instance.getEmail(),
 				instance.getDisplayName(),
@@ -76,9 +77,15 @@ public class UserRepository extends AbstractRepository<User, String> {
 		try {
 			this.getHelper().execute(
 				"CREATE TABLE IF NOT EXISTS users (" +
-					"email VARCHAR(255) NOT NULL," +
-					"display_name VARCHAR(255) NOT NULL," +
-					"password VARCHAR(255)," +
+					"email VARCHAR(255) NOT NULL, " +
+					"display_name VARCHAR(255) NOT NULL, " +
+					"password VARCHAR(255), " +
+					
+					"created_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
+					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
+					"deleted_at TIMESTAMP, " +
+					
+					"PRIMARY KEY (email) " +
 				")");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -87,11 +94,17 @@ public class UserRepository extends AbstractRepository<User, String> {
 
 	@Override
 	public User mapToObject(ResultSet rs) throws SQLException {
-		return new UserBuilder()
+		User user = new UserBuilder()
 			.setEmail(rs.getString("email"))
 			.setDisplayName(rs.getString("display_name"))
 			.setPassword(rs.getString("password"))
 			.build();
+		
+		user.setCreatedAt(rs.getTimestamp("created_at"));
+		user.setUpdatedAt(rs.getTimestamp("updated_at"));
+		user.setDeletedAt(rs.getTimestamp("deleted_at"));
+		
+		return user;
 	}
 
 }

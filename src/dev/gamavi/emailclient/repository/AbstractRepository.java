@@ -4,9 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import dev.gamavi.emailclient.model.BaseModel;
 import dev.gamavi.emailclient.shared.SQLHelper;
 
-public abstract class AbstractRepository<Type, ID> {
+public abstract class AbstractRepository<Type extends BaseModel, ID> {
 	
 	private final SQLHelper helper;
 	

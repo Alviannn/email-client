@@ -1,6 +1,6 @@
 package dev.gamavi.emailclient.model;
 
-public class User {
+public class User extends BaseModel {
 	
 	private String email;
 	private String displayName;

@@ -25,5 +25,9 @@ public class Shared {
 	public SQLHelper getHelper() {
 		return helper;
 	}
-
+	
+	public UserRepository getUserRepo() {
+		return userRepo;
+	}
+	
 }

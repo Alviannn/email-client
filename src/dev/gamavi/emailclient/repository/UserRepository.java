@@ -30,6 +30,22 @@ public class UserRepository extends AbstractRepository<User, String> {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void update(User instance) {
+		try {
+			this.getHelper().execute(
+				"UPDATE users SET" +
+				" display_name = ?, password = ?, updated_at = NOW() " +
+				"WHERE email = ?",
+
+				instance.getDisplayName(),
+				instance.getPassword()
+			);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void delete(String id) {

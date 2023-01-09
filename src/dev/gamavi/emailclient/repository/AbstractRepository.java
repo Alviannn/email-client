@@ -20,6 +20,8 @@ public abstract class AbstractRepository<Type extends BaseModel, ID> {
 	}
 	
 	public abstract void insert(Type instance);
+	
+	public abstract void update(Type instance);
 
 	public abstract void delete(ID id);
 	

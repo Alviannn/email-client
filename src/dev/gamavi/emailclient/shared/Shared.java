@@ -31,7 +31,7 @@ public class Shared {
 	}
 	
 	public void createRepoTables() {
-		
+		userRepo.createTable();
 	}
 	
 }

@@ -128,7 +128,6 @@ public class UserRepository extends AbstractRepository<User, String> {
 		
 		user.setCreatedAt(rs.getTimestamp("created_at"));
 		user.setUpdatedAt(rs.getTimestamp("updated_at"));
-		user.setDeletedAt(rs.getTimestamp("deleted_at"));
 		
 		return user;
 	}

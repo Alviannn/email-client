@@ -26,7 +26,11 @@ public class UserRepository extends AbstractRepository<User, String> {
 				instance.getDisplayName(),
 				instance.getPassword()
 			);
-		} catch (SQLException e) {
+			
+			User tmp = this.findOne(instance.getEmail());
+			instance.setCreatedAt(tmp.getCreatedAt());
+			instance.setUpdatedAt(tmp.getUpdatedAt());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -37,11 +41,14 @@ public class UserRepository extends AbstractRepository<User, String> {
 			this.getHelper().execute(
 				"UPDATE users SET" +
 				" display_name = ?, password = ?, updated_at = NOW() " +
-				"WHERE email = ?",
+				"WHERE email = ? AND deleted_at IS NOT NULL",
 
 				instance.getDisplayName(),
 				instance.getPassword()
 			);
+			
+			User tmp = this.findOne(instance.getEmail());
+			instance.setUpdatedAt(tmp.getUpdatedAt());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -50,7 +57,10 @@ public class UserRepository extends AbstractRepository<User, String> {
 	@Override
 	public void delete(String id) {
 		try {
-			this.getHelper().execute("DELETE users WHERE email = ?", id);
+			this.getHelper().execute(
+				"UPDATE users SET deleted_at = NOW() WHERE email = ? AND deleted_at IS NOT NULL",
+				id
+			);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -58,7 +68,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 
 	@Override
 	public User findOne(String id) {
-		String query = "SELECT * FROM users WHERE email = ?";
+		String query = "SELECT * FROM users WHERE email = ? AND deleted_at IS NOT NULL";
 		try (ResultSet rs = this.getHelper().getResults(query, id)) {
 			if (!rs.next()) {
 				return null;
@@ -75,7 +85,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 	@Override
 	public List<User> findAll() {
 		List<User> users = new ArrayList<>();
-		String query = "SELECT * FROM users";
+		String query = "SELECT * FROM users WHERE deleted_at IS NOT NULL";
 		
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {

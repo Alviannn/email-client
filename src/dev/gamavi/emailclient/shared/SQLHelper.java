@@ -29,7 +29,7 @@ public class SQLHelper {
         String connUrl = String.format(urlFormat, host, port, database);
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("MySQL driver is not available");
         }

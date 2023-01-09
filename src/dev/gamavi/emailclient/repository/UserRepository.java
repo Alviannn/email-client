@@ -70,6 +70,20 @@ public class UserRepository extends AbstractRepository<User, String> {
 		
 		return users;
 	}
+	
+	@Override
+	public void createTable() {
+		try {
+			this.getHelper().execute(
+				"CREATE TABLE IF NOT EXISTS users (" +
+					"email VARCHAR(255) NOT NULL," +
+					"display_name VARCHAR(255) NOT NULL," +
+					"password VARCHAR(255)," +
+				")");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public User mapToObject(ResultSet rs) throws SQLException {
@@ -79,6 +93,5 @@ public class UserRepository extends AbstractRepository<User, String> {
 			.setPassword(rs.getString("password"))
 			.build();
 	}
-
 
 }

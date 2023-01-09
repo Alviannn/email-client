@@ -25,6 +25,8 @@ public abstract class AbstractRepository<Type, ID> {
 	public abstract Type findOne(ID id);
 	
 	public abstract List<Type> findAll();
+	
+	public abstract void createTable();
 
 	/**
 	 * Helps mapping from `ResultSet` to object/instance class.

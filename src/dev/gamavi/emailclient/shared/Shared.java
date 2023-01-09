@@ -30,4 +30,8 @@ public class Shared {
 		return userRepo;
 	}
 	
+	public void createRepoTables() {
+		
+	}
+	
 }

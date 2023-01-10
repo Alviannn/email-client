@@ -18,9 +18,8 @@ public class MainMenu extends AbstractMenu{
 					"====================\n" +
 					"1. Login\n" +
 					"2. Register\n" +
-					"3. Exit\n" +
-					">> ");
-			choose = Utils.SCANNER.nextInt();
+					"3. Exit\n");
+			choose = Utils.scanAbsoluteInt(">> ");
 			if(choose==1) loginMenu.show();
 			else if(choose==2) registerMenu.show();
 			else if(choose==3) {

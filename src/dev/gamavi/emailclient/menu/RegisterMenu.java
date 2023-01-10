@@ -63,10 +63,13 @@ public class RegisterMenu extends AbstractMenu {
 			}
 		}
 		
+		if (true) {
+			show();
+		}
+		
 		return true;
 	}
 	
-	// TODO: Password validation
 	private Boolean passwordValidation(String password) {
 		
 		/**

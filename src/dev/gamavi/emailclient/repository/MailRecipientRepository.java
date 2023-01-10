@@ -5,12 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.gamavi.emailclient.model.Mail;
-import dev.gamavi.emailclient.model.MailBuilder;
 import dev.gamavi.emailclient.model.MailRecipient;
 import dev.gamavi.emailclient.model.MailRecipientBuilder;
 import dev.gamavi.emailclient.model.ReceiveType;
-import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Closer;
 import dev.gamavi.emailclient.shared.SQLHelper;
 import dev.gamavi.emailclient.shared.Shared;

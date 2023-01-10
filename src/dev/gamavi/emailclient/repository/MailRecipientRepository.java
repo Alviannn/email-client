@@ -5,12 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.gamavi.emailclient.model.Mail;
-import dev.gamavi.emailclient.model.MailBuilder;
 import dev.gamavi.emailclient.model.MailRecipient;
 import dev.gamavi.emailclient.model.MailRecipientBuilder;
 import dev.gamavi.emailclient.model.ReceiveType;
-import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Closer;
 import dev.gamavi.emailclient.shared.SQLHelper;
 import dev.gamavi.emailclient.shared.Shared;
@@ -106,6 +103,21 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 		String query = "SELECT * FROM mails_recipients WHERE deleted_at IS NOT NULL";
 		
 		try (ResultSet rs = this.getHelper().getResults(query)) {
+			while (rs.next()) {
+				mailRecipients.add(this.mapToObject(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return mailRecipients;
+	}
+	
+	public List<MailRecipient> findAllByMailId(Long mailId) {
+		List<MailRecipient> mailRecipients = new ArrayList<>();
+		String query = "SELECT * FROM mails_recipients WHERE mail_id = ? AND deleted_at IS NOT NULL";
+		
+		try (ResultSet rs = this.getHelper().getResults(query, mailId)) {
 			while (rs.next()) {
 				mailRecipients.add(this.mapToObject(rs));
 			}

@@ -1,6 +1,5 @@
 package dev.gamavi.emailclient.menu;
 
-import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class LoginMenu extends AbstractMenu {
@@ -16,9 +15,9 @@ public class LoginMenu extends AbstractMenu {
 			"-----------------------\n");
 		
 		System.out.print("Email: ");
-		emailString = Utils.scan.next();
+		emailString = Utils.SCANNER.next();
 		System.out.print("Password: ");
-		passwordString = Utils.scan.next();
+		passwordString = Utils.SCANNER.next();
 		if(emailValidation(emailString) && passwordValidation(passwordString)) {
 			DashboardMenu dashboardMenu = new DashboardMenu();
 			dashboardMenu.show();

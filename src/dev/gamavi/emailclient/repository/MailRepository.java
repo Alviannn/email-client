@@ -115,6 +115,21 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 		return mails;
 	}
 
+	public List<Mail> findAllBySenderEmail(String senderEmail) {
+		List<Mail> mails = new ArrayList<>();
+		String query = "SELECT * FROM mails WHERE sender = ? AND deleted_at IS NOT NULL";
+
+		try (ResultSet rs = this.getHelper().getResults(query, senderEmail)) {
+			while (rs.next()) {
+				mails.add(this.mapToObject(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return mails;
+	}
+
 	@Override
 	public void createTable() {
 		try {

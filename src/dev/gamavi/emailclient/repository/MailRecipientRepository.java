@@ -112,6 +112,21 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 		
 		return mailRecipients;
 	}
+	
+	public List<MailRecipient> findAllByMailId(Long mailId) {
+		List<MailRecipient> mailRecipients = new ArrayList<>();
+		String query = "SELECT * FROM mails_recipients WHERE mail_id = ? AND deleted_at IS NOT NULL";
+		
+		try (ResultSet rs = this.getHelper().getResults(query, mailId)) {
+			while (rs.next()) {
+				mailRecipients.add(this.mapToObject(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return mailRecipients;
+	}
 
 	@Override
 	public void createTable() {

@@ -8,8 +8,10 @@ public class MainMenu extends AbstractMenu{
 	public void show() {
 		Utils.clearScreen();
 		int choose;
-		LoginMenu loginMenu = new LoginMenu();
-		RegisterMenu registerMenu = new RegisterMenu();
+
+		AbstractMenu loginMenu = this.getSwitchMenus()[0];
+		AbstractMenu registerMenu = this.getSwitchMenus()[1];
+
 		do {
 			System.out.print(
 					"Email client\n" +

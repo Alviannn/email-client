@@ -1,5 +1,6 @@
 package dev.gamavi.emailclient.shared;
 
+import dev.gamavi.emailclient.repository.MailRepository;
 import dev.gamavi.emailclient.repository.UserRepository;
 
 public class Shared {
@@ -16,10 +17,12 @@ public class Shared {
 	
 	private final SQLHelper helper;
 	private final UserRepository userRepo;
+	private final MailRepository mailRepo;
 	
 	private Shared() {
 		this.helper = new SQLHelper("localhost", 3306, "email_client", "root", "");
 		this.userRepo = new UserRepository(helper);
+		this.mailRepo = new MailRepository(helper);
 	}
 
 	public SQLHelper getHelper() {
@@ -28,6 +31,10 @@ public class Shared {
 	
 	public UserRepository getUserRepo() {
 		return userRepo;
+	}
+	
+	public MailRepository getMailRepo() {
+		return mailRepo;
 	}
 	
 	public void createRepoTables() {

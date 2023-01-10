@@ -66,7 +66,6 @@ public class RegisterMenu extends AbstractMenu {
 		return true;
 	}
 	
-	// TODO: Password validation
 	private Boolean passwordValidation(String password) {
 		
 		/**

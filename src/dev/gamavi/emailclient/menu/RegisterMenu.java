@@ -2,7 +2,7 @@ package dev.gamavi.emailclient.menu;
 
 import dev.gamavi.emailclient.shared.Utils;
 
-public class RegisterMenu implements IMenu {
+public class RegisterMenu extends AbstractMenu {
 	
 	@Override
 	public void show() {

@@ -46,11 +46,14 @@ public class UserRepository extends AbstractRepository<User, String> {
 		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
 				"UPDATE users SET" +
-				" display_name = ?, password = ?, updated_at = NOW() " +
+				"  display_name = ?," +
+				"  password = ?," +
+				"  updated_at = NOW() " +
 				"WHERE email = ? AND deleted_at IS NOT NULL",
 
 				instance.getDisplayName(),
-				instance.getPassword()
+				instance.getPassword(),
+				instance.getEmail()
 			);
 			
 			String afterUpdateQuery = "SELECT updated_at FROM users WHERE email = ?";

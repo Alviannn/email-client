@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.shared;
 
+import java.sql.SQLException;
+
 import dev.gamavi.emailclient.repository.MailRecipientRepository;
 import dev.gamavi.emailclient.repository.MailRepository;
 import dev.gamavi.emailclient.repository.UserRepository;
@@ -44,7 +46,9 @@ public class Shared {
 		return mailRecipientRepo;
 	}
 
-	public void createRepoTables() {
+	public void initDatabase() throws SQLException {
+		helper.connect();
+
 		userRepo.createTable();
 		mailRepo.createTable();
 		mailRecipientRepo.createTable();

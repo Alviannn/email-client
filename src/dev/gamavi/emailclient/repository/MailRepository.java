@@ -29,13 +29,13 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 				instance.getTitle(),
 				instance.getMessage()
 			);
-			
+
 			SQLHelper helper = this.getHelper();
 			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails WHERE id = ?";
 
 			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, "LAST_INSERT_ID()"));
 			assert rs.next();
-			
+
 			instance.setId(rs.getLong("id"));
 			instance.setCreatedAt(rs.getTimestamp("created_at"));
 			instance.setCreatedAt(rs.getTimestamp("updated_at"));
@@ -58,10 +58,10 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 				instance.getMessage(),
 				instance.getId()
 			);
-			
+
 			SQLHelper helper = this.getHelper();
 			String afterUpdateQuery = "SELECT updated_at FROM mails WHERE id = ?";
-			
+
 			ResultSet rs = closer.add(helper.getResults(afterUpdateQuery, instance.getId()));
 			assert rs.next();
 
@@ -90,12 +90,12 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 			if (!rs.next()) {
 				return null;
 			}
-			
+
 			return this.mapToObject(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -103,7 +103,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	public List<Mail> findAll() {
 		List<Mail> mails = new ArrayList<>();
 		String query = "SELECT * FROM mails WHERE deleted_at IS NOT NULL";
-		
+
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {
 				mails.add(this.mapToObject(rs));
@@ -111,7 +111,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return mails;
 	}
 
@@ -120,39 +120,39 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 		try {
 			this.getHelper().execute(
 				"CREATE TABLE IF NOT EXISTS mails (" +
-					"id BIGINT NOT NULL AUTO_INCREMENT " +
+					"id BIGINT NOT NULL AUTO_INCREMENT, " +
 					"sender VARCHAR(255) NOT NULL, " +
 					"title VARCHAR(255) NOT NULL, " +
 					"message VARCHAR(255) NOT NULL, " +
-					
+
 					"created_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"deleted_at TIMESTAMP, " +
-					
+
 					"PRIMARY KEY (id), " +
 					"FOREIGN KEY (sender) REFERENCES users (email) " +
 				")");
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override
 	public Mail mapToObject(ResultSet rs) throws SQLException {
 		String senderEmail = rs.getString("sender");
-		
+
 		UserRepository userRepo = Shared.getInstance().getUserRepo();
 		User user = userRepo.findOne(senderEmail);
-		
+
 		Mail mail = new MailBuilder()
 			.setTitle(rs.getString("title"))
 			.setMessage(rs.getString("message"))
 			.setSender(user)
 			.build();
-		
+
 		mail.setCreatedAt(rs.getTimestamp("created_at"));
 		mail.setUpdatedAt(rs.getTimestamp("updated_at"));
-		
+
 		return mail;
 	}
 

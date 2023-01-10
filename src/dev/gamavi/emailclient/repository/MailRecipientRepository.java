@@ -29,13 +29,13 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 				instance.getRecipient().getEmail(),
 				instance.getType().ordinal()
 			);
-			
+
 			SQLHelper helper = this.getHelper();
 			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails_recipient WHERE id = ?";
 
 			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, "LAST_INSERT_ID()"));
 			assert rs.next();
-			
+
 			instance.setId(rs.getLong("id"));
 			instance.setCreatedAt(rs.getTimestamp("created_at"));
 			instance.setCreatedAt(rs.getTimestamp("updated_at"));
@@ -56,10 +56,10 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 				instance.isHasRead(),
 				instance.getId()
 			);
-			
+
 			SQLHelper helper = this.getHelper();
 			String afterUpdateQuery = "SELECT updated_at FROM mails_recipients WHERE id = ?";
-			
+
 			ResultSet rs = closer.add(helper.getResults(afterUpdateQuery, instance.getId()));
 			assert rs.next();
 
@@ -88,12 +88,12 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 			if (!rs.next()) {
 				return null;
 			}
-			
+
 			return this.mapToObject(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -101,7 +101,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 	public List<MailRecipient> findAll() {
 		List<MailRecipient> mailRecipients = new ArrayList<>();
 		String query = "SELECT * FROM mails_recipients WHERE deleted_at IS NOT NULL";
-		
+
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {
 				mailRecipients.add(this.mapToObject(rs));
@@ -109,14 +109,14 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return mailRecipients;
 	}
-	
+
 	public List<MailRecipient> findAllByMailId(Long mailId) {
 		List<MailRecipient> mailRecipients = new ArrayList<>();
 		String query = "SELECT * FROM mails_recipients WHERE mail_id = ? AND deleted_at IS NOT NULL";
-		
+
 		try (ResultSet rs = this.getHelper().getResults(query, mailId)) {
 			while (rs.next()) {
 				mailRecipients.add(this.mapToObject(rs));
@@ -124,7 +124,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return mailRecipients;
 	}
 
@@ -133,45 +133,45 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 		try {
 			this.getHelper().execute(
 				"CREATE TABLE IF NOT EXISTS mails_recipients (" +
-					"id BIGINT NOT NULL AUTO_INCREMENT " +
+					"id BIGINT NOT NULL AUTO_INCREMENT, " +
 					"mail_id BIGINT NOT NULL, " +
 					"recipient VARCHAR(255) NOT NULL, " +
 					"type INT NOT NULL, " +
 					"has_read BOOLEAN NOT NULL, " +
-					
+
 					"created_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"deleted_at TIMESTAMP, " +
-					
+
 					"PRIMARY KEY (id), " +
 					"FOREIGN KEY (mail_id) REFERENCES mails (id), " +
 					"FOREIGN KEY (recipient) REFERENCES users (email) " +
 				")");
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override
 	public MailRecipient mapToObject(ResultSet rs) throws SQLException {
 		Shared shared = Shared.getInstance();
-		
+
 		UserRepository userRepo = shared.getUserRepo();
 		MailRepository mailRepo = shared.getMailRepo();
-		
+
 		Long mailId = rs.getLong("mail_id");
 		String recipientEmail = rs.getString("recipient");
-		
+
 		MailRecipient mailRecipient = new MailRecipientBuilder()
 			.setMail(mailRepo.findOne(mailId))
 			.setRecipient(userRepo.findOne(recipientEmail))
 			.setHasRead(rs.getBoolean("has_read"))
 			.setType(ReceiveType.values()[rs.getInt("type")])
 			.build();
-		
+
 		mailRecipient.setCreatedAt(rs.getTimestamp("created_at"));
 		mailRecipient.setUpdatedAt(rs.getTimestamp("updated_at"));
-		
+
 		return mailRecipient;
 	}
 

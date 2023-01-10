@@ -27,20 +27,20 @@ public class UserRepository extends AbstractRepository<User, String> {
 				instance.getDisplayName(),
 				instance.getPassword()
 			);
-			
+
 			String afterInsertQuery = "SELECT created_at, updated_at FROM users WHERE email = ?";
 			SQLHelper helper = this.getHelper();
-			
+
 			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, instance.getEmail()));
 			assert rs.next();
-			
+
 			instance.setCreatedAt(rs.getTimestamp("created_at"));
 			instance.setUpdatedAt(rs.getTimestamp("updated_at"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void update(User instance) {
 		try (Closer closer = new Closer()) {
@@ -55,13 +55,13 @@ public class UserRepository extends AbstractRepository<User, String> {
 				instance.getPassword(),
 				instance.getEmail()
 			);
-			
+
 			String afterUpdateQuery = "SELECT updated_at FROM users WHERE email = ?";
 			SQLHelper helper = this.getHelper();
-			
+
 			ResultSet rs = closer.add(helper.getResults(afterUpdateQuery, instance.getEmail()));
 			assert rs.next();
-			
+
 			instance.setUpdatedAt(rs.getTimestamp("updated_at"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,12 +87,12 @@ public class UserRepository extends AbstractRepository<User, String> {
 			if (!rs.next()) {
 				return null;
 			}
-			
+
 			return this.mapToObject(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -100,7 +100,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 	public List<User> findAll() {
 		List<User> users = new ArrayList<>();
 		String query = "SELECT * FROM users WHERE deleted_at IS NOT NULL";
-		
+
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {
 				users.add(this.mapToObject(rs));
@@ -108,10 +108,10 @@ public class UserRepository extends AbstractRepository<User, String> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return users;
 	}
-	
+
 	@Override
 	public void createTable() {
 		try {
@@ -120,11 +120,11 @@ public class UserRepository extends AbstractRepository<User, String> {
 					"email VARCHAR(255) NOT NULL, " +
 					"display_name VARCHAR(255) NOT NULL, " +
 					"password VARCHAR(255), " +
-					
+
 					"created_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"deleted_at TIMESTAMP, " +
-					
+
 					"PRIMARY KEY (email) " +
 				")");
 		} catch (SQLException e) {
@@ -139,10 +139,10 @@ public class UserRepository extends AbstractRepository<User, String> {
 			.setDisplayName(rs.getString("display_name"))
 			.setPassword(rs.getString("password"))
 			.build();
-		
+
 		user.setCreatedAt(rs.getTimestamp("created_at"));
 		user.setUpdatedAt(rs.getTimestamp("updated_at"));
-		
+
 		return user;
 	}
 

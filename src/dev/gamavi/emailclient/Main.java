@@ -1,13 +1,13 @@
 package dev.gamavi.emailclient;
 
+import dev.gamavi.emailclient.menu.MainMenu;
 import dev.gamavi.emailclient.menu.RegisterMenu;
 
 public class Main {
 
 	public Main() {
-		RegisterMenu registerMenu = new RegisterMenu();
-		
-		registerMenu.show();
+		MainMenu mainMenu = new MainMenu();
+		mainMenu.show();
 	}
 	
 	public static void main(String[] args) {

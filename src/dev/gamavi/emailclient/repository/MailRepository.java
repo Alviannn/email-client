@@ -48,7 +48,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	public void update(Mail instance) {
 		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
-				"UPDATE mail SET" +
+				"UPDATE mails SET" +
 				" title = ?, message = ?, updated_at = NOW() " +
 				"WHERE id = ? AND deleted_at IS NOT NULL",
 
@@ -127,7 +127,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 					"deleted_at TIMESTAMP, " +
 					
 					"PRIMARY KEY (id), " +
-					"FOREIGN KEY (sender) REFERENCES users (email)" +
+					"FOREIGN KEY (sender) REFERENCES users (email) " +
 				")");
 		} catch (SQLException e) {
 			e.printStackTrace();

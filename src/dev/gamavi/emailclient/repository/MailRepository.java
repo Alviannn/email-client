@@ -49,11 +49,14 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
 				"UPDATE mails SET" +
-				" title = ?, message = ?, updated_at = NOW() " +
+				"  title = ?," +
+				"  message = ?," +
+				"  updated_at = NOW() " +
 				"WHERE id = ? AND deleted_at IS NOT NULL",
 
 				instance.getTitle(),
-				instance.getMessage()
+				instance.getMessage(),
+				instance.getId()
 			);
 			
 			SQLHelper helper = this.getHelper();
@@ -137,7 +140,6 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	@Override
 	public Mail mapToObject(ResultSet rs) throws SQLException {
 		String senderEmail = rs.getString("sender");
-		SQLHelper helper = this.getHelper();
 		
 		UserRepository userRepo = Shared.getInstance().getUserRepo();
 		User user = userRepo.findOne(senderEmail);

@@ -10,6 +10,7 @@ import dev.gamavi.emailclient.model.MailBuilder;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Closer;
 import dev.gamavi.emailclient.shared.SQLHelper;
+import dev.gamavi.emailclient.shared.Shared;
 
 public class MailRepository extends AbstractRepository<Mail, Long> {
 
@@ -125,7 +126,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"deleted_at TIMESTAMP, " +
 					
-					"PRIMARY KEY (id) " +
+					"PRIMARY KEY (id), " +
 					"FOREIGN KEY (sender) REFERENCES users (email)" +
 				")");
 		} catch (SQLException e) {
@@ -138,7 +139,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 		String senderEmail = rs.getString("sender");
 		SQLHelper helper = this.getHelper();
 		
-		UserRepository userRepo = new UserRepository(helper);
+		UserRepository userRepo = Shared.getInstance().getUserRepo();
 		User user = userRepo.findOne(senderEmail);
 		
 		Mail mail = new MailBuilder()

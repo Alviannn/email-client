@@ -1,5 +1,8 @@
 package dev.gamavi.emailclient.menu;
 
+import dev.gamavi.emailclient.model.User;
+import dev.gamavi.emailclient.repository.UserRepository;
+import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class LoginMenu extends AbstractMenu {
@@ -13,25 +16,28 @@ public class LoginMenu extends AbstractMenu {
 		System.out.println(
 			"Login Menu\n" +
 			"-----------------------\n");
-		
+
 		System.out.print("Email: ");
 		emailString = Utils.SCANNER.nextLine();
 		System.out.print("Password: ");
 		passwordString = Utils.SCANNER.nextLine();
-		if(emailValidation(emailString) && passwordValidation(passwordString)) {
-			DashboardMenu dashboardMenu = new DashboardMenu();
-			dashboardMenu.show();
+
+		UserRepository userRepo = Shared.getInstance().getUserRepo();
+		User foundUser = userRepo.findOne(emailString);
+
+		if (foundUser == null) {
+			// todo: email isn't registered
+			return;
 		}
-	}
+		if (foundUser.getPassword().equals(passwordString)) {
+			// todo: password doesn't match
+			return;
+		}
 
-	boolean emailValidation(String email) {
-		//ToDo: cek data dari database
-		return true;
-	}
+		Shared.getInstance().setCurrentUser(foundUser);
 
-	boolean passwordValidation(String password) {
-		//ToDo: cek data dari database
-		return true;
+		AbstractMenu dashboardMenu = this.getSwitchMenus()[0];
+		dashboardMenu.show();
 	}
 
 }

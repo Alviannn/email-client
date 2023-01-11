@@ -2,6 +2,7 @@ package dev.gamavi.emailclient;
 
 import java.sql.SQLException;
 
+import dev.gamavi.emailclient.menu.DashboardMenu;
 import dev.gamavi.emailclient.menu.LoginMenu;
 import dev.gamavi.emailclient.menu.MainMenu;
 import dev.gamavi.emailclient.menu.RegisterMenu;
@@ -16,8 +17,10 @@ public class Main {
 		MainMenu mainMenu = new MainMenu();
 		LoginMenu loginMenu = new LoginMenu();
 		RegisterMenu registerMenu = new RegisterMenu();
+		DashboardMenu dashboardMenu = new DashboardMenu();
 
 		mainMenu.setSwitchMenus(loginMenu, registerMenu);
+		loginMenu.setSwitchMenus(dashboardMenu);
 
 		mainMenu.show();
 	}

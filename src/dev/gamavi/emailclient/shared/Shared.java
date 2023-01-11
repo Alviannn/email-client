@@ -2,6 +2,7 @@ package dev.gamavi.emailclient.shared;
 
 import java.sql.SQLException;
 
+import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.repository.MailRecipientRepository;
 import dev.gamavi.emailclient.repository.MailRepository;
 import dev.gamavi.emailclient.repository.UserRepository;
@@ -22,6 +23,11 @@ public class Shared {
 	private final UserRepository userRepo;
 	private final MailRepository mailRepo;
 	private final MailRecipientRepository mailRecipientRepo;
+
+	/**
+	 * Stores the currently authenticated user.
+	 */
+	private User currentUser;
 
 	private Shared() {
 		this.helper = new SQLHelper("localhost", 3306, "email_client", "root", "");
@@ -44,6 +50,14 @@ public class Shared {
 
 	public MailRecipientRepository getMailRecipientRepo() {
 		return mailRecipientRepo;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
+	}
+
+	public User getCurrentUser() {
+		return currentUser;
 	}
 
 	public void initDatabase() throws SQLException {

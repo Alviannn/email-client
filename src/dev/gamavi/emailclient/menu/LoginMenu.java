@@ -7,7 +7,7 @@ public class LoginMenu extends AbstractMenu {
 	@Override
 	public void show() {
 		Utils.clearScreen();
-		
+
 		String emailString, passwordString;
 
 		System.out.println(
@@ -15,20 +15,20 @@ public class LoginMenu extends AbstractMenu {
 			"-----------------------\n");
 		
 		System.out.print("Email: ");
-		emailString = Utils.SCANNER.next();
+		emailString = Utils.SCANNER.nextLine();
 		System.out.print("Password: ");
-		passwordString = Utils.SCANNER.next();
+		passwordString = Utils.SCANNER.nextLine();
 		if(emailValidation(emailString) && passwordValidation(passwordString)) {
 			DashboardMenu dashboardMenu = new DashboardMenu();
 			dashboardMenu.show();
 		}
 	}
-	
+
 	boolean emailValidation(String email) {
 		//ToDo: cek data dari database
 		return true;
 	}
-	
+
 	boolean passwordValidation(String password) {
 		//ToDo: cek data dari database
 		return true;

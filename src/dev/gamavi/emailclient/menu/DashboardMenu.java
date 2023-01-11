@@ -29,9 +29,10 @@ public class DashboardMenu extends AbstractMenu{
 			}
 		}while(choose<1 || choose>3);
 	}
-	
+
 	void viewEmail() {
-		
+		AbstractMenu inboxMenu = this.getSwitchMenus()[0];
+		inboxMenu.show();
 	}
 	
 	void composeEmail() {

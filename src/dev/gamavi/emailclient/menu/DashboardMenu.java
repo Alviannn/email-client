@@ -14,9 +14,8 @@ public class DashboardMenu extends AbstractMenu{
 					"====================================\n" +
 					"1. View emails\n" +
 					"2. Compose emails\n" +
-					"3. Exit\n" +
-					">> ");
-			choose = Utils.SCANNER.nextInt();
+					"3. Exit\n");
+			choose = Utils.scanAbsoluteInt(">> ");
 			if(choose==1) viewEmail();
 			else if(choose==2) composeEmail();
 			else if(choose==3) {

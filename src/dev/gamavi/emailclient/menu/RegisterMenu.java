@@ -1,5 +1,9 @@
 package dev.gamavi.emailclient.menu;
 
+import dev.gamavi.emailclient.model.User;
+import dev.gamavi.emailclient.model.UserBuilder;
+import dev.gamavi.emailclient.repository.UserRepository;
+import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class RegisterMenu extends AbstractMenu {
@@ -32,20 +36,19 @@ public class RegisterMenu extends AbstractMenu {
 			
 			isPasswordOk = passwordValidation(password);
 		} while (!isPasswordOk);
-		
-		// TODO: Insert user
-		System.out.printf(
-			"\nName: %s\n"
-			+ "Email: %s@nanadaime.net\n"
-			+ "Password: %s",
-			name,
-			emailUsername,
-			password
-		);
+
+		User user = new UserBuilder()
+			.setEmail(emailUsername + "@nanadaime.net")
+			.setDisplayName(name)
+			.setPassword(password)
+			.build();
+
+		UserRepository userRepo = Shared.getInstance().getUserRepo();
+		userRepo.insert(user);
 	}
-	
+
 	private Boolean emailUsernameValidation(String emailUsername) {
-		
+
 		/**
 		 * Email Criteria:
 		 * - Unique

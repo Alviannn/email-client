@@ -34,7 +34,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails_recipient WHERE id = ?";
 
 			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, "LAST_INSERT_ID()"));
-			assert rs.next();
+			rs.next();
 
 			instance.setId(rs.getLong("id"));
 			instance.setCreatedAt(rs.getTimestamp("created_at"));
@@ -61,7 +61,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 			String afterUpdateQuery = "SELECT updated_at FROM mails_recipients WHERE id = ?";
 
 			ResultSet rs = closer.add(helper.getResults(afterUpdateQuery, instance.getId()));
-			assert rs.next();
+			rs.next();
 
 			instance.setCreatedAt(rs.getTimestamp("updated_at"));
 		} catch (Exception e) {

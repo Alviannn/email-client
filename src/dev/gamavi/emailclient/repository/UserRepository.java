@@ -32,7 +32,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 			SQLHelper helper = this.getHelper();
 
 			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, instance.getEmail()));
-			assert rs.next();
+			rs.next();
 
 			instance.setCreatedAt(rs.getTimestamp("created_at"));
 			instance.setUpdatedAt(rs.getTimestamp("updated_at"));
@@ -60,7 +60,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 			SQLHelper helper = this.getHelper();
 
 			ResultSet rs = closer.add(helper.getResults(afterUpdateQuery, instance.getEmail()));
-			assert rs.next();
+			rs.next();
 
 			instance.setUpdatedAt(rs.getTimestamp("updated_at"));
 		} catch (Exception e) {

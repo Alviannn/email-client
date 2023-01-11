@@ -8,13 +8,11 @@ import dev.gamavi.emailclient.model.Mail;
 import dev.gamavi.emailclient.model.MailRecipient;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.repository.MailRecipientRepository;
-import dev.gamavi.emailclient.repository.MailRepository;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class ViewInboxMenu extends AbstractMenu {
 
-	private final MailRepository mailRepo = Shared.getInstance().getMailRepo();
 	private final MailRecipientRepository mailRecipientRepo = Shared.getInstance().getMailRecipientRepo();
 
 	@Override

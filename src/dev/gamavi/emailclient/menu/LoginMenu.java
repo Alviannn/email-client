@@ -26,10 +26,12 @@ public class LoginMenu extends AbstractMenu {
 		User foundUser = userRepo.findOne(emailString);
 
 		if (foundUser == null) {
+			System.out.println("is null");
 			// todo: email isn't registered
 			return;
 		}
-		if (foundUser.getPassword().equals(passwordString)) {
+		if (!foundUser.getPassword().equals(passwordString)) {
+			System.out.println("not match");
 			// todo: password doesn't match
 			return;
 		}

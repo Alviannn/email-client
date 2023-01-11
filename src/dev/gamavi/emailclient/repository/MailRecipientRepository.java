@@ -51,7 +51,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 				"UPDATE mails_recipients SET" +
 				"  has_read = ?," +
 				"  updated_at = NOW() " +
-				"WHERE id = ? AND deleted_at IS NOT NULL",
+				"WHERE id = ? AND deleted_at IS NULL",
 
 				instance.isHasRead(),
 				instance.getId()
@@ -73,7 +73,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 	public void delete(Long id) {
 		try {
 			this.getHelper().execute(
-				"UPDATE mails_recipients SET deleted_at = NOW() WHERE id = ? AND deleted_at IS NOT NULL",
+				"UPDATE mails_recipients SET deleted_at = NOW() WHERE id = ? AND deleted_at IS NULL",
 				id
 			);
 		} catch (SQLException e) {
@@ -83,7 +83,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 
 	@Override
 	public MailRecipient findOne(Long id) {
-		String query = "SELECT * FROM mails_recipients WHERE id = ? AND deleted_at IS NOT NULL";
+		String query = "SELECT * FROM mails_recipients WHERE id = ? AND deleted_at IS NULL";
 		try (ResultSet rs = this.getHelper().getResults(query, id)) {
 			if (!rs.next()) {
 				return null;
@@ -100,7 +100,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 	@Override
 	public List<MailRecipient> findAll() {
 		List<MailRecipient> mailRecipients = new ArrayList<>();
-		String query = "SELECT * FROM mails_recipients WHERE deleted_at IS NOT NULL";
+		String query = "SELECT * FROM mails_recipients WHERE deleted_at IS NULL";
 
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {
@@ -115,9 +115,24 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 
 	public List<MailRecipient> findAllByMailId(Long mailId) {
 		List<MailRecipient> mailRecipients = new ArrayList<>();
-		String query = "SELECT * FROM mails_recipients WHERE mail_id = ? AND deleted_at IS NOT NULL";
+		String query = "SELECT * FROM mails_recipients WHERE mail_id = ? AND deleted_at IS NULL";
 
 		try (ResultSet rs = this.getHelper().getResults(query, mailId)) {
+			while (rs.next()) {
+				mailRecipients.add(this.mapToObject(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return mailRecipients;
+	}
+
+	public List<MailRecipient> findAllByRecipientEmail(String recipientEmail) {
+		List<MailRecipient> mailRecipients = new ArrayList<>();
+		String query = "SELECT * FROM mails_recipients WHERE recipient = ? AND deleted_at IS NULL";
+
+		try (ResultSet rs = this.getHelper().getResults(query, recipientEmail)) {
 			while (rs.next()) {
 				mailRecipients.add(this.mapToObject(rs));
 			}

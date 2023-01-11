@@ -52,7 +52,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 				"  title = ?," +
 				"  message = ?," +
 				"  updated_at = NOW() " +
-				"WHERE id = ? AND deleted_at IS NOT NULL",
+				"WHERE id = ? AND deleted_at IS NULL",
 
 				instance.getTitle(),
 				instance.getMessage(),
@@ -75,7 +75,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	public void delete(Long id) {
 		try {
 			this.getHelper().execute(
-				"UPDATE mails SET deleted_at = NOW() WHERE id = ? AND deleted_at IS NOT NULL",
+				"UPDATE mails SET deleted_at = NOW() WHERE id = ? AND deleted_at IS NULL",
 				id
 			);
 		} catch (SQLException e) {
@@ -85,7 +85,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 
 	@Override
 	public Mail findOne(Long id) {
-		String query = "SELECT * FROM mails WHERE id = ? AND deleted_at IS NOT NULL";
+		String query = "SELECT * FROM mails WHERE id = ? AND deleted_at IS NULL";
 		try (ResultSet rs = this.getHelper().getResults(query, id)) {
 			if (!rs.next()) {
 				return null;
@@ -102,7 +102,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	@Override
 	public List<Mail> findAll() {
 		List<Mail> mails = new ArrayList<>();
-		String query = "SELECT * FROM mails WHERE deleted_at IS NOT NULL";
+		String query = "SELECT * FROM mails WHERE deleted_at IS NULL";
 
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {
@@ -117,7 +117,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 
 	public List<Mail> findAllBySenderEmail(String senderEmail) {
 		List<Mail> mails = new ArrayList<>();
-		String query = "SELECT * FROM mails WHERE sender = ? AND deleted_at IS NOT NULL";
+		String query = "SELECT * FROM mails WHERE sender = ? AND deleted_at IS NULL";
 
 		try (ResultSet rs = this.getHelper().getResults(query, senderEmail)) {
 			while (rs.next()) {

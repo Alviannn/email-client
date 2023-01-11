@@ -49,7 +49,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 				"  display_name = ?," +
 				"  password = ?," +
 				"  updated_at = NOW() " +
-				"WHERE email = ? AND deleted_at IS NOT NULL",
+				"WHERE email = ? AND deleted_at IS NULL",
 
 				instance.getDisplayName(),
 				instance.getPassword(),
@@ -72,7 +72,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 	public void delete(String id) {
 		try {
 			this.getHelper().execute(
-				"UPDATE users SET deleted_at = NOW() WHERE email = ? AND deleted_at IS NOT NULL",
+				"UPDATE users SET deleted_at = NOW() WHERE email = ? AND deleted_at IS NULL",
 				id
 			);
 		} catch (SQLException e) {
@@ -82,7 +82,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 
 	@Override
 	public User findOne(String id) {
-		String query = "SELECT * FROM users WHERE email = ? AND deleted_at IS NOT NULL";
+		String query = "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL";
 		try (ResultSet rs = this.getHelper().getResults(query, id)) {
 			if (!rs.next()) {
 				return null;
@@ -99,7 +99,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 	@Override
 	public List<User> findAll() {
 		List<User> users = new ArrayList<>();
-		String query = "SELECT * FROM users WHERE deleted_at IS NOT NULL";
+		String query = "SELECT * FROM users WHERE deleted_at IS NULL";
 
 		try (ResultSet rs = this.getHelper().getResults(query)) {
 			while (rs.next()) {

@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.menu;
 
+import dev.gamavi.emailclient.model.User;
+import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class DashboardMenu extends AbstractMenu{
@@ -7,10 +9,11 @@ public class DashboardMenu extends AbstractMenu{
 	@Override
 	public void show() {
 		Utils.clearScreen();
+		User currentUser = Shared.getInstance().getCurrentUser();
 		int choose;
 		do {
 			System.out.print(
-					"Welcome USER to Email Client\n" + 
+					"Welcome " + currentUser.getDisplayName() + " to Email Client\n" +
 					"====================================\n" +
 					"1. View emails\n" +
 					"2. Compose emails\n" +

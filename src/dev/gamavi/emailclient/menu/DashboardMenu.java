@@ -9,7 +9,10 @@ public class DashboardMenu extends AbstractMenu{
 	@Override
 	public void show() {
 		Utils.clearScreen();
-		User currentUser = Shared.getInstance().getCurrentUser();
+
+		Shared shared = Shared.getInstance();
+		User currentUser = shared.getCurrentUser();
+
 		int choose;
 		do {
 			System.out.print(
@@ -17,13 +20,12 @@ public class DashboardMenu extends AbstractMenu{
 					"====================================\n" +
 					"1. View emails\n" +
 					"2. Compose emails\n" +
-					"3. Exit\n");
+					"3. Logout\n");
 			choose = Utils.scanAbsoluteInt(">> ");
 			if(choose==1) viewEmail();
 			else if(choose==2) composeEmail();
 			else if(choose==3) {
-				System.out.println("Adios amigos!");
-				System.exit(0);
+				shared.setCurrentUser(null);
 			}else {
 				System.out.println("Invalid input!");
 			}

@@ -34,12 +34,12 @@ public class ViewInboxMenu extends AbstractMenu {
 		}
 
 		String tableHeader = String.format(
-			"| %-3s | %-40s | %-20s | %-11s |",
+			"| %-3s | %-40s | %-20s | %-19s |",
 			"No.", "Subject", "Sender", "Date");
 
-		String rowFormat = "| %3d | %-40s | %-20s | %-11s |\n";
+		String rowFormat = "| %3d | %-40s | %-20s | %-19s |\n";
 
-		String line = "+-----+------------------------------------------+----------------------+-------------+";
+		String line = "+-----+------------------------------------------+----------------------+---------------------+";
 		System.out.println(line);
 		System.out.println(tableHeader);
 		System.out.println(line);
@@ -49,7 +49,7 @@ public class ViewInboxMenu extends AbstractMenu {
 			Mail mail = mailRecipient.getMail();
 			User sender = mail.getSender();
 
-			DateFormat formatter = new SimpleDateFormat("dd MM yyyy");
+			DateFormat formatter = new SimpleDateFormat("dd MMM yyyy - HH:mm");
 
 			System.out.printf(
 				rowFormat,

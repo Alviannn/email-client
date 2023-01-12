@@ -55,7 +55,7 @@ public class Utils {
 	 */
 	public static boolean scanAbsoluteConfirm(String prefix) {
 		while (true) {
-			System.out.println(prefix);
+			System.out.print(prefix);
 
 			String line = SCANNER.nextLine();
 			if (!line.equals("Y") && !line.equals("N")) {

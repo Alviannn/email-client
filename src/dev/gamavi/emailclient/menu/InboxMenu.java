@@ -52,7 +52,11 @@ public class InboxMenu extends AbstractMenu {
 			"| %-3s | %-40s | %-20s | %-19s |",
 			"No.", "Subject", "Sender", "Date");
 
-		String rowFormat = "| %3d | %-40s | %-20s | %-19s |\n";
+		String rowFormat = "| %3s | %-40s | %-20s | %-19s |\n";
+		String coloredRowFormat = "| $y%3s$r | $y%-40s$r | $y%-20s$r | $y%-19s$r |\n"
+			.replaceAll("\\$y", Utils.ANSI_YELLOW)
+			.replaceAll("\\$r", Utils.ANSI_RESET);
+
 		String line = "+-----+------------------------------------------+----------------------+---------------------+";
 
 		long unreadCount = recipientRepo.countUnreadMails(currentUser.getEmail());
@@ -68,11 +72,13 @@ public class InboxMenu extends AbstractMenu {
 			User sender = mail.getSender();
 
 			DateFormat formatter = new SimpleDateFormat("dd MMM yyyy - HH:mm");
+			String chosenFormat = mailRecipient.isHasRead() ? rowFormat : coloredRowFormat;
 
 			System.out.printf(
-				rowFormat,
+				chosenFormat,
 				++count,
-				mail.getTitle(), sender.getDisplayName(), formatter.format(mail.getCreatedAt()));
+				mail.getTitle(),
+				sender.getDisplayName(), formatter.format(mail.getCreatedAt()));
 		}
 
 		System.out.println(line);

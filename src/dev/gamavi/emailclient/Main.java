@@ -7,7 +7,7 @@ import dev.gamavi.emailclient.menu.DashboardMenu;
 import dev.gamavi.emailclient.menu.LoginMenu;
 import dev.gamavi.emailclient.menu.MainMenu;
 import dev.gamavi.emailclient.menu.RegisterMenu;
-import dev.gamavi.emailclient.menu.ViewInboxMenu;
+import dev.gamavi.emailclient.menu.InboxMenu;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Shared;
 
@@ -21,7 +21,7 @@ public class Main {
 		LoginMenu loginMenu = new LoginMenu();
 		RegisterMenu registerMenu = new RegisterMenu();
 		DashboardMenu dashboardMenu = new DashboardMenu();
-		ViewInboxMenu inboxMenu = new ViewInboxMenu();
+		InboxMenu inboxMenu = new InboxMenu();
 		ComposeMailMenu composeMenu = new ComposeMailMenu();
 
 		mainMenu.setSwitchMenus(loginMenu, registerMenu);

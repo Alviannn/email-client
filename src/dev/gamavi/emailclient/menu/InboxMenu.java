@@ -11,7 +11,7 @@ import dev.gamavi.emailclient.repository.MailRecipientRepository;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
-public class ViewInboxMenu extends AbstractMenu {
+public class InboxMenu extends AbstractMenu {
 
 	private final MailRecipientRepository mailRecipientRepo = Shared.getInstance().getMailRecipientRepo();
 

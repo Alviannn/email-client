@@ -22,12 +22,13 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 	public void insert(MailRecipient instance) {
 		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
-				"INSERT INTO mails" +
-				" (mail_id, recipient, type, has_read) VALUES (?, ?, ?)",
+				"INSERT INTO mails_recipient" +
+				" (mail_id, recipient, type, has_read) VALUES (?, ?, ?, ?)",
 
 				instance.getMail().getId(),
 				instance.getRecipient().getEmail(),
-				instance.getType().ordinal()
+				instance.getType().ordinal(),
+				instance.isHasRead()
 			);
 
 			SQLHelper helper = this.getHelper();

@@ -144,6 +144,22 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 		return mailRecipients;
 	}
 
+	public long countUnreadMails(String recipient) {
+		String query = "SELECT COUNT(id) as unreadCount FROM mails_recipients WHERE recipient = ? AND has_read = FALSE AND deleted_at IS NULL";
+
+		try (ResultSet rs = this.getHelper().getResults(query, recipient)) {
+			if (!rs.next()) {
+				return 0;
+			}
+
+			return rs.getLong("unreadCount");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
 	@Override
 	public void createTable() {
 		try {

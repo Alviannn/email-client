@@ -13,16 +13,17 @@ import dev.gamavi.emailclient.shared.Utils;
 
 public class InboxMenu extends AbstractMenu {
 
-	private final MailRecipientRepository mailRecipientRepo = Shared.getInstance().getMailRecipientRepo();
+	private final Shared shared = Shared.getInstance();
+	private final MailRecipientRepository recipientRepo = shared.getMailRecipientRepo();
 
 	@Override
 	public void show() {
 		User currentUser = Shared.getInstance().getCurrentUser();
-		List<MailRecipient> mailRecipients = mailRecipientRepo.findAllByRecipientEmail(currentUser.getEmail());
+		List<MailRecipient> mailRecipients = recipientRepo.findAllByRecipientEmail(currentUser.getEmail());
 
 		Utils.clearScreen();
 
-		System.out.print(
+		System.out.println(
 			"Viewing Email Inbox\n" +
 			"-----------------------\n");
 
@@ -45,13 +46,18 @@ public class InboxMenu extends AbstractMenu {
 	}
 
 	private void printMailsTable(List<MailRecipient> mailRecipients) {
+		User currentUser = Shared.getInstance().getCurrentUser();
+
 		String tableHeader = String.format(
 			"| %-3s | %-40s | %-20s | %-19s |",
 			"No.", "Subject", "Sender", "Date");
 
 		String rowFormat = "| %3d | %-40s | %-20s | %-19s |\n";
-
 		String line = "+-----+------------------------------------------+----------------------+---------------------+";
+
+		long unreadCount = recipientRepo.countUnreadMails(currentUser.getEmail());
+		System.out.printf("Total unread mails: %d\n", unreadCount);
+
 		System.out.println(line);
 		System.out.println(tableHeader);
 		System.out.println(line);

@@ -43,6 +43,26 @@ public class Utils {
 	}
 
 	/**
+	 * Scans the console for Yes (Y) and No (N) question to the user.
+	 * It is mainly used for confirming things to the user.
+	 *
+	 * @param prefix
+	 * @return
+	 */
+	public static boolean scanConfirm(String prefix) {
+		while (true) {
+			System.out.println(prefix);
+
+			String line = SCANNER.nextLine();
+			if (!line.equals("Y") && !line.equals("N")) {
+				continue;
+			}
+
+			return line.equals("Y");
+		}
+	}
+
+	/**
 	 * Ever had those in console app where it says "Press enter to continue..."?
 	 * Yeah, this is it.
 	 */

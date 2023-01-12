@@ -31,9 +31,9 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 			);
 
 			SQLHelper helper = this.getHelper();
-			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails WHERE id = ?";
+			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails WHERE id = LAST_INSERT_ID(id)";
 
-			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, "LAST_INSERT_ID()"));
+			ResultSet rs = closer.add(helper.getResults(afterInsertQuery));
 			rs.next();
 
 			instance.setId(rs.getLong("id"));

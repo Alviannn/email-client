@@ -22,7 +22,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 	public void insert(MailRecipient instance) {
 		try (Closer closer = new Closer()) {
 			this.getHelper().execute(
-				"INSERT INTO mails_recipient" +
+				"INSERT INTO mails_recipients" +
 				" (mail_id, recipient, type, has_read) VALUES (?, ?, ?, ?)",
 
 				instance.getMail().getId(),
@@ -32,9 +32,9 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 			);
 
 			SQLHelper helper = this.getHelper();
-			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails_recipient WHERE id = ?";
+			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails_recipients WHERE id = LAST_INSERT_ID(id)";
 
-			ResultSet rs = closer.add(helper.getResults(afterInsertQuery, "LAST_INSERT_ID()"));
+			ResultSet rs = closer.add(helper.getResults(afterInsertQuery));
 			rs.next();
 
 			instance.setId(rs.getLong("id"));

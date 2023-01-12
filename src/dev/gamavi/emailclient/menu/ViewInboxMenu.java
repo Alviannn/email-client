@@ -37,7 +37,7 @@ public class ViewInboxMenu extends AbstractMenu {
 			"| %-3s | %-40s | %-20s | %-11s |",
 			"No.", "Subject", "Sender", "Date");
 
-		String rowFormat = "| %3d | %-40s | %-20s | %-11s |";
+		String rowFormat = "| %3d | %-40s | %-20s | %-11s |\n";
 
 		String line = "+-----+------------------------------------------+----------------------+-------------+";
 		System.out.println(line);
@@ -58,6 +58,7 @@ public class ViewInboxMenu extends AbstractMenu {
 		}
 
 		System.out.println(line);
+		Utils.waitForEnter();
 	}
 
 }

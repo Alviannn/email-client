@@ -18,7 +18,7 @@ public class InboxMenu extends AbstractMenu {
 	@Override
 	public void show() {
 		User currentUser = Shared.getInstance().getCurrentUser();
-		List<MailRecipient> mailList = mailRecipientRepo.findAllByRecipientEmail(currentUser.getEmail());
+		List<MailRecipient> mailRecipients = mailRecipientRepo.findAllByRecipientEmail(currentUser.getEmail());
 
 		Utils.clearScreen();
 
@@ -26,13 +26,25 @@ public class InboxMenu extends AbstractMenu {
 			"Viewing Email Inbox\n" +
 			"-----------------------\n");
 
-		if (mailList.isEmpty()) {
+		if (mailRecipients.isEmpty()) {
 			System.out.println("You haven't received any mails yet :(");
 			Utils.waitForEnter();
-
 			return;
 		}
 
+		this.printMailsTable(mailRecipients);
+		int choice;
+		do {
+			choice = Utils.scanAbsoluteInt("Choose a mail by its number to read ['0' to cancel]: ");
+			if (choice == 0) {
+				return;
+			}
+		} while (choice < 1 || choice > mailRecipients.size());
+
+		// todo: open read menu and bring the selected mail
+	}
+
+	private void printMailsTable(List<MailRecipient> mailRecipients) {
 		String tableHeader = String.format(
 			"| %-3s | %-40s | %-20s | %-19s |",
 			"No.", "Subject", "Sender", "Date");
@@ -45,7 +57,7 @@ public class InboxMenu extends AbstractMenu {
 		System.out.println(line);
 
 		int count = 0;
-		for (MailRecipient mailRecipient : mailList) {
+		for (MailRecipient mailRecipient : mailRecipients) {
 			Mail mail = mailRecipient.getMail();
 			User sender = mail.getSender();
 
@@ -58,7 +70,6 @@ public class InboxMenu extends AbstractMenu {
 		}
 
 		System.out.println(line);
-		Utils.waitForEnter();
 	}
 
 }

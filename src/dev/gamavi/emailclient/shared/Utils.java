@@ -44,12 +44,11 @@ public class Utils {
 
 	/**
 	 * Scans the console for Yes (Y) and No (N) question to the user.
-	 * It is mainly used for confirming things to the user.
+	 * It is mainly used for confirming something to the user.
 	 *
-	 * @param prefix
-	 * @return
+	 * @param prefix The input prompt that the user will see.
 	 */
-	public static boolean scanConfirm(String prefix) {
+	public static boolean scanAbsoluteConfirm(String prefix) {
 		while (true) {
 			System.out.println(prefix);
 

@@ -49,6 +49,11 @@ public class ComposeMailMenu extends AbstractMenu {
 			return;
 		}
 
+		boolean shouldSend = Utils.scanAbsoluteConfirm("Are you sure that you want to send this email? [Y/N]: ");
+		if (!shouldSend) {
+			return;
+		}
+
 		Mail mail = new MailBuilder()
 			.setTitle(subject)
 			.setMessage(content)

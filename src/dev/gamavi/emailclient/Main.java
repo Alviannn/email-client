@@ -2,11 +2,13 @@ package dev.gamavi.emailclient;
 
 import java.sql.SQLException;
 
+import dev.gamavi.emailclient.menu.ComposeMailMenu;
 import dev.gamavi.emailclient.menu.DashboardMenu;
 import dev.gamavi.emailclient.menu.LoginMenu;
 import dev.gamavi.emailclient.menu.MainMenu;
 import dev.gamavi.emailclient.menu.RegisterMenu;
 import dev.gamavi.emailclient.menu.ViewInboxMenu;
+import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Shared;
 
 public class Main {
@@ -20,12 +22,21 @@ public class Main {
 		RegisterMenu registerMenu = new RegisterMenu();
 		DashboardMenu dashboardMenu = new DashboardMenu();
 		ViewInboxMenu inboxMenu = new ViewInboxMenu();
+		ComposeMailMenu composeMenu = new ComposeMailMenu();
 
 		mainMenu.setSwitchMenus(loginMenu, registerMenu);
 		loginMenu.setSwitchMenus(dashboardMenu);
-		dashboardMenu.setSwitchMenus(inboxMenu);
+		dashboardMenu.setSwitchMenus(inboxMenu, composeMenu);
 
-		mainMenu.show();
+		while (true) {
+			User currentUser = shared.getCurrentUser();
+
+			if (currentUser == null) {
+				mainMenu.show();
+			} else {
+				dashboardMenu.show();
+			}
+		}
 	}
 
 	public static void main(String[] args) throws SQLException {

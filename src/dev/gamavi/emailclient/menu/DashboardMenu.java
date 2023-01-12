@@ -34,9 +34,10 @@ public class DashboardMenu extends AbstractMenu{
 		AbstractMenu inboxMenu = this.getSwitchMenus()[0];
 		inboxMenu.show();
 	}
-	
+
 	void composeEmail() {
-		
+		AbstractMenu composeMenu = this.getSwitchMenus()[1];
+		composeMenu.show();
 	}
 
 }

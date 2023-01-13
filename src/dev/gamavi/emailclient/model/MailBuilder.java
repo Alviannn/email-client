@@ -23,6 +23,11 @@ public class MailBuilder implements IBuilder<Mail> {
 		return this;
 	}
 
+	public MailBuilder setReplyTo(Mail replyTo) {
+		mail.setReplyTo(replyTo);
+		return this;
+	}
+
 	public String getTitle() {
 		return mail.getTitle();
 	}
@@ -33,6 +38,10 @@ public class MailBuilder implements IBuilder<Mail> {
 
 	public User getSender() {
 		return mail.getSender();
+	}
+
+	public Mail getReplyTo() {
+		return mail.getReplyTo();
 	}
 
 	@Override

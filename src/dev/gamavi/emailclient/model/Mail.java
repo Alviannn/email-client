@@ -5,7 +5,12 @@ public class Mail extends BaseModel {
 	private Long id;
 	private String title;
 	private String message;
+
 	private User sender;
+	/**
+	 * The email being replied to, it's {@code nullable}
+	 */
+	private Mail replyTo;
 
 	public Long getId() {
 		return id;
@@ -23,6 +28,10 @@ public class Mail extends BaseModel {
 		return sender;
 	}
 
+	public Mail getReplyTo() {
+		return replyTo;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -37,6 +46,10 @@ public class Mail extends BaseModel {
 
 	public void setSender(User sender) {
 		this.sender = sender;
+	}
+
+	public void setReplyTo(Mail replyTo) {
+		this.replyTo = replyTo;
 	}
 
 }

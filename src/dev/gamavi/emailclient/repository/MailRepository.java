@@ -21,11 +21,18 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	@Override
 	public void insert(Mail instance) {
 		try (Closer closer = new Closer()) {
+			Long replyToMailId = null;
+			Mail replyTo = instance.getReplyTo();
+			if (replyTo != null) {
+				replyToMailId = replyTo.getId();
+			}
+
 			this.getHelper().execute(
 				"INSERT INTO mails" +
-				" (sender, title, message) VALUES (?, ?, ?)",
+				" (sender, reply_to, title, message) VALUES (?, ?, ?, ?)",
 
 				instance.getSender().getEmail(),
+				replyToMailId,
 				instance.getTitle(),
 				instance.getMessage()
 			);
@@ -137,6 +144,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 				"CREATE TABLE IF NOT EXISTS mails (" +
 					"id BIGINT NOT NULL AUTO_INCREMENT, " +
 					"sender VARCHAR(255) NOT NULL, " +
+					"reply_to BIGINT, " +
 					"title VARCHAR(255) NOT NULL, " +
 					"message VARCHAR(255) NOT NULL, " +
 
@@ -145,7 +153,8 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 					"deleted_at TIMESTAMP, " +
 
 					"PRIMARY KEY (id), " +
-					"FOREIGN KEY (sender) REFERENCES users (email) " +
+					"FOREIGN KEY (sender) REFERENCES users (email), " +
+					"FOREIGN KEY (reply_to) REFERENCES mails (id)" +
 				")");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -154,15 +163,22 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 
 	@Override
 	public Mail mapToObject(ResultSet rs) throws SQLException {
-		String senderEmail = rs.getString("sender");
-
 		UserRepository userRepo = Shared.getInstance().getUserRepo();
+
+		String senderEmail = rs.getString("sender");
+		Long replyToMailId = (Long) rs.getObject("reply_to");
+
 		User user = userRepo.findOne(senderEmail);
+		Mail replyTo = null;
+		if (replyToMailId != null) {
+			replyTo = this.findOne(replyToMailId);
+		}
 
 		Mail mail = new MailBuilder()
 			.setTitle(rs.getString("title"))
 			.setMessage(rs.getString("message"))
 			.setSender(user)
+			.setReplyTo(replyTo)
 			.build();
 
 		mail.setCreatedAt(rs.getTimestamp("created_at"));

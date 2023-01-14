@@ -7,11 +7,8 @@ import dev.gamavi.emailclient.menu.DashboardMenu;
 import dev.gamavi.emailclient.menu.LoginMenu;
 import dev.gamavi.emailclient.menu.MainMenu;
 import dev.gamavi.emailclient.menu.RegisterMenu;
-<<<<<<< HEAD
 import dev.gamavi.emailclient.menu.SentMailMenu;
-=======
 import dev.gamavi.emailclient.menu.ReplyMenu;
->>>>>>> branch 'main' of git@github.com:Alviannn/email-client.git
 import dev.gamavi.emailclient.menu.InboxMenu;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Shared;

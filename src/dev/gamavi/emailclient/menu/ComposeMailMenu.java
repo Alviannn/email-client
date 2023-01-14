@@ -98,7 +98,7 @@ public class ComposeMailMenu extends AbstractMenu {
 		List<User> recipientList;
 
 		do {
-			System.out.print("To ['0' to cancel, separate by semicolon ';']: ");
+			System.out.print("Recipient(s) address ['0' to cancel, separate by semicolon ';']: ");
 			String line = scanner.nextLine();
 
 			if (line.isEmpty()) {

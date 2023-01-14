@@ -201,6 +201,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 			.setType(ReceiveType.values()[rs.getInt("type")])
 			.build();
 
+		mailRecipient.setId(rs.getLong("id"));
 		mailRecipient.setCreatedAt(rs.getTimestamp("created_at"));
 		mailRecipient.setUpdatedAt(rs.getTimestamp("updated_at"));
 

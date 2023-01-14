@@ -181,6 +181,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 			.setReplyTo(replyTo)
 			.build();
 
+		mail.setId(rs.getLong("id"));
 		mail.setCreatedAt(rs.getTimestamp("created_at"));
 		mail.setUpdatedAt(rs.getTimestamp("updated_at"));
 

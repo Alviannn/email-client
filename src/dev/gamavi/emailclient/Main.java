@@ -7,7 +7,11 @@ import dev.gamavi.emailclient.menu.DashboardMenu;
 import dev.gamavi.emailclient.menu.LoginMenu;
 import dev.gamavi.emailclient.menu.MainMenu;
 import dev.gamavi.emailclient.menu.RegisterMenu;
+<<<<<<< HEAD
 import dev.gamavi.emailclient.menu.SentMailMenu;
+=======
+import dev.gamavi.emailclient.menu.ReplyMenu;
+>>>>>>> branch 'main' of git@github.com:Alviannn/email-client.git
 import dev.gamavi.emailclient.menu.InboxMenu;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Shared;
@@ -25,6 +29,7 @@ public class Main {
 		InboxMenu inboxMenu = new InboxMenu();
 		SentMailMenu sentMailMenu = new SentMailMenu();
 		ComposeMailMenu composeMenu = new ComposeMailMenu();
+		ReplyMenu replyMenu = new ReplyMenu();
 
 		mainMenu.setSwitchMenus(loginMenu, registerMenu);
 		loginMenu.setSwitchMenus(dashboardMenu);

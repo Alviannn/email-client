@@ -2,6 +2,8 @@ package dev.gamavi.emailclient.menu;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import dev.gamavi.emailclient.model.Mail;
@@ -39,10 +41,23 @@ public class InboxMenu extends AbstractMenu {
 			choice = Utils.scanAbsoluteInt("Choose a mail by its number to read ['0' to cancel]: ");
 			if (choice == 0) {
 				return;
+			}else {
+				openEmail(choice, mailRecipients);
 			}
 		} while (choice < 1 || choice > mailRecipients.size());
 
-		// todo: open read menu and bring the selected mail
+		// todo: open read menu and bring the selected mail /done -damar
+	}
+	
+	private void openEmail(int id, List<MailRecipient> mailRecipients) {
+		for(int i=0;i<mailRecipients.size();i++) {
+			if(id == i+1) {
+				System.out.println(
+						"Sender: " + mailRecipients.get(i).getMail().getSender().getDisplayName() + "\n" +
+						"Subject: " + mailRecipients.get(i).getMail().getTitle() + "\n" +
+						"Message: " + mailRecipients.get(i).getMail().getMessage() + "\n");
+			}
+		}
 	}
 
 	private void printMailsTable(List<MailRecipient> mailRecipients) {

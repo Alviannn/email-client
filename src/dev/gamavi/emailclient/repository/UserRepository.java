@@ -123,7 +123,7 @@ public class UserRepository extends AbstractRepository<User, String> {
 
 					"created_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
-					"deleted_at TIMESTAMP, " +
+					"deleted_at TIMESTAMP NULL, " +
 
 					"PRIMARY KEY (email) " +
 				")");

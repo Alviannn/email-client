@@ -25,6 +25,7 @@ public class LoginMenu extends AbstractMenu {
 		UserRepository userRepo = Shared.getInstance().getUserRepo();
 		User foundUser = userRepo.findOne(emailString);
 
+		// TODO: Show clear error message
 		if (foundUser == null) {
 			System.out.println("is null");
 			// todo: email isn't registered

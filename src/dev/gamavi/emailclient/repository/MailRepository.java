@@ -150,7 +150,7 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 
 					"created_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
 					"updated_at TIMESTAMP NOT NULL DEFAULT NOW(), " +
-					"deleted_at TIMESTAMP, " +
+					"deleted_at TIMESTAMP NULL, " +
 
 					"PRIMARY KEY (id), " +
 					"FOREIGN KEY (sender) REFERENCES users (email), " +

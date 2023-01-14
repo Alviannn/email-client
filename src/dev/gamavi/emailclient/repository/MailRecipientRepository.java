@@ -32,7 +32,7 @@ public class MailRecipientRepository extends AbstractRepository<MailRecipient, L
 			);
 
 			SQLHelper helper = this.getHelper();
-			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails_recipients WHERE id = LAST_INSERT_ID(id)";
+			String afterInsertQuery = "SELECT id, created_at, updated_at FROM mails_recipients WHERE id = LAST_INSERT_ID()";
 
 			ResultSet rs = closer.add(helper.getResults(afterInsertQuery));
 			rs.next();

@@ -31,7 +31,7 @@ public class ReplyMenu extends AbstractMenu {
 
 		User currentUser = shared.getCurrentUser();
 		User repliedSender = repliedMail.getSender();
-		System.out.print("Replying to: " + repliedSender.getEmail());
+		System.out.println("Replying to: " + repliedSender.getEmail());
 
 		String content;
 		try {

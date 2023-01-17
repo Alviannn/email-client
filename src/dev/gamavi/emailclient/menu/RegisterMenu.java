@@ -7,6 +7,9 @@ import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class RegisterMenu extends AbstractMenu {
+
+	private final Shared shared = Shared.getInstance();
+	private final UserRepository userRepo = shared.getUserRepo();
 	
 	@Override
 	public void show() {
@@ -43,7 +46,6 @@ public class RegisterMenu extends AbstractMenu {
 			.setPassword(password)
 			.build();
 
-		UserRepository userRepo = Shared.getInstance().getUserRepo();
 		userRepo.insert(user);
 	}
 
@@ -57,15 +59,20 @@ public class RegisterMenu extends AbstractMenu {
 		 * - Periods.
 		 * - all lowercase (auto by system)
 		 */
-		
-		// TODO: Check uniqueness [Waiting for UserRepository]
+
 		for (char cUsername : emailUsername.toCharArray()) {
 			if (!Character.isLetter(cUsername) && !Character.isDigit(cUsername) && cUsername != '.') {
 				System.out.println("Username should only contains letters, numbers, and periods!");
 				return false;
 			}
 		}
-		
+
+		User sameUser = userRepo.findOne(emailUsername);
+		if (sameUser != null) {
+			System.out.println("Username must be unique!");
+			return false;
+		}
+
 		return true;
 	}
 	

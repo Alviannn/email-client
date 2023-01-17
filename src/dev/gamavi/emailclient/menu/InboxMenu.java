@@ -47,6 +47,7 @@ public class InboxMenu extends AbstractMenu {
 			"Choose:\n" +
 			"1. Reply\n" +
 			"2. Reply to all\n" +
+			"3. View replied mail\n" +
 			"0. Back to dashboard\n");
 
 		do {
@@ -54,7 +55,7 @@ public class InboxMenu extends AbstractMenu {
 			if (choice == 0) {
 				return;
 			}
-		} while (choice < 1 || choice > 2);
+		} while (choice < 1 || choice > 3);
 
 		ReplyMenu replyMenu = (ReplyMenu) this.getNextMenus()[0];
 		switch (choice) {
@@ -63,6 +64,9 @@ public class InboxMenu extends AbstractMenu {
 				break;
 			case 2:
 				// todo: add reply to all (meaning to all CC'd users)
+				break;
+			case 3:
+				// todo: add view previous mail
 				break;
 		}
 

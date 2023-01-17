@@ -78,6 +78,11 @@ public class InboxMenu extends AbstractMenu {
 			"Subject: " + mail.getTitle() + "\n" +
 			"Message: " + mail.getMessage() + "\n");
 
+		if (!mailRecipient.isHasRead()) {
+			mailRecipient.setHasRead(true);
+			recipientRepo.update(mailRecipient);
+		}
+
 		return mail;
 	}
 

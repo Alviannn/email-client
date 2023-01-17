@@ -7,6 +7,9 @@ import dev.gamavi.emailclient.shared.Utils;
 
 public class LoginMenu extends AbstractMenu {
 
+	private final Shared shared = Shared.getInstance();
+	private final UserRepository userRepo = shared.getUserRepo();
+
 	@Override
 	public void show() {
 		Utils.clearScreen();
@@ -19,25 +22,23 @@ public class LoginMenu extends AbstractMenu {
 
 		System.out.print("Email: ");
 		emailString = Utils.SCANNER.nextLine();
+
 		System.out.print("Password: ");
 		passwordString = Utils.SCANNER.nextLine();
 
-		UserRepository userRepo = Shared.getInstance().getUserRepo();
 		User foundUser = userRepo.findOne(emailString);
-
-		// TODO: Show clear error message
 		if (foundUser == null) {
-			System.out.println("is null");
-			// todo: email isn't registered
+			System.out.println("User isn't registered.");
+			Utils.waitForEnter();
 			return;
 		}
 		if (!foundUser.getPassword().equals(passwordString)) {
-			System.out.println("not match");
-			// todo: password doesn't match
+			System.out.println("Password doesn't match.");
+			Utils.waitForEnter();
 			return;
 		}
 
-		Shared.getInstance().setCurrentUser(foundUser);
+		shared.setCurrentUser(foundUser);
 
 		AbstractMenu dashboardMenu = this.getNextMenus()[0];
 		dashboardMenu.show();

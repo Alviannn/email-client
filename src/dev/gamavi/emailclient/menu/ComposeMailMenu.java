@@ -161,7 +161,7 @@ public class ComposeMailMenu extends AbstractMenu {
 
 				break;
 			} else {
-				contentBuilder.append(line);
+				contentBuilder.append(line).append("\n");
 			}
 		}
 

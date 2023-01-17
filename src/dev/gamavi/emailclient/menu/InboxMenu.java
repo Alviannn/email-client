@@ -72,11 +72,31 @@ public class InboxMenu extends AbstractMenu {
 	private Mail openEmail(int index, List<MailRecipient> mailRecipients) {
 		MailRecipient mailRecipient = mailRecipients.get(index - 1);
 		Mail mail = mailRecipient.getMail();
+		List<MailRecipient> currentRecipients = recipientRepo.findAllByMailId(mail.getId());
+
+		StringBuilder ccBuilder = new StringBuilder();
+		StringBuilder recipientBuilder = new StringBuilder();
+
+		for (MailRecipient recipient : currentRecipients) {
+			switch (recipient.getType()) {
+				case NORMAL:
+					recipientBuilder.append(recipient.getRecipient().getDisplayName()).append("; ");
+					break;
+				case CARBON_COPY:
+					ccBuilder.append(recipient.getRecipient().getDisplayName()).append("; ");
+					break;
+				default:
+					break;
+			}
+		}
 
 		System.out.println(
-			"Sender: " + mail.getSender().getDisplayName() + "\n" +
-			"Subject: " + mail.getTitle() + "\n" +
-			"Message: " + mail.getMessage() + "\n");
+			"Sender   : " + mail.getSender().getDisplayName() + "\n" +
+			"Recipient: " + recipientBuilder.toString() + "\n" +
+			"CC       : " + ccBuilder.toString() + "\n" +
+			"Subject  : " + mail.getTitle() + "\n" +
+			"Message  :\n" +
+			mail.getMessage() + "\n");
 
 		if (!mailRecipient.isHasRead()) {
 			mailRecipient.setHasRead(true);

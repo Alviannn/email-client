@@ -39,24 +39,46 @@ public class InboxMenu extends AbstractMenu {
 			choice = Utils.scanAbsoluteInt("Choose a mail by its number to read ['0' to cancel]: ");
 			if (choice == 0) {
 				return;
-			}else {
-				openEmail(choice, mailRecipients);
-				Utils.waitForEnter();
 			}
 		} while (choice < 1 || choice > mailRecipients.size());
 
-		// todo: open read menu and bring the selected mail /done -damar
+		Mail selectedMail = openEmail(choice, mailRecipients);
+		System.out.print(
+			"Choose:\n" +
+			"1. Reply\n" +
+			"2. Reply to all\n" +
+			"0. Back to dashboard\n");
+
+		do {
+			choice = Utils.scanAbsoluteInt(">> ");
+			if (choice == 0) {
+				return;
+			}
+		} while (choice < 1 || choice > 2);
+
+		ReplyMenu replyMenu = (ReplyMenu) this.getSwitchMenus()[0];
+		switch (choice) {
+			case 1:
+				replyMenu.setRepliedMail(selectedMail);
+				break;
+			case 2:
+				// todo: add reply to all (meaning to all CC'd users)
+				break;
+		}
+
+		replyMenu.show();
 	}
 
-	private void openEmail(int id, List<MailRecipient> mailRecipients) {
-		for(int i=0;i<mailRecipients.size();i++) {
-			if(id == i+1) {
-				System.out.println(
-						"Sender: " + mailRecipients.get(i).getMail().getSender().getDisplayName() + "\n" +
-						"Subject: " + mailRecipients.get(i).getMail().getTitle() + "\n" +
-						"Message: " + mailRecipients.get(i).getMail().getMessage() + "\n");
-			}
-		}
+	private Mail openEmail(int index, List<MailRecipient> mailRecipients) {
+		MailRecipient mailRecipient = mailRecipients.get(index - 1);
+		Mail mail = mailRecipient.getMail();
+
+		System.out.println(
+			"Sender: " + mail.getSender().getDisplayName() + "\n" +
+			"Subject: " + mail.getTitle() + "\n" +
+			"Message: " + mail.getMessage() + "\n");
+
+		return mail;
 	}
 
 	private void printMailsTable(List<MailRecipient> mailRecipients) {

@@ -31,6 +31,7 @@ public class Main {
 		mainMenu.setSwitchMenus(loginMenu, registerMenu);
 		loginMenu.setSwitchMenus(dashboardMenu);
 		dashboardMenu.setSwitchMenus(inboxMenu, sentMailMenu, composeMenu);
+		inboxMenu.setSwitchMenus(replyMenu);
 
 		while (true) {
 			User currentUser = shared.getCurrentUser();

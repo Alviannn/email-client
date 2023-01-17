@@ -9,8 +9,8 @@ public class MainMenu extends AbstractMenu{
 		Utils.clearScreen();
 		int choose;
 
-		AbstractMenu loginMenu = this.getSwitchMenus()[0];
-		AbstractMenu registerMenu = this.getSwitchMenus()[1];
+		AbstractMenu loginMenu = this.getNextMenus()[0];
+		AbstractMenu registerMenu = this.getNextMenus()[1];
 
 		do {
 			System.out.print(

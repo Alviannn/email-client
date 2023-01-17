@@ -3,19 +3,19 @@ package dev.gamavi.emailclient.menu;
 public abstract class AbstractMenu {
 
 	/**
-	 * All targeted menus to be switched to are stored here.
+	 * Any menus that is needed (to be passed) and to be in the next menu
+	 * (as if switching to the next page) is stored here.
 	 *
-	 * It doesn't have to be filled, use it according to the relations
-	 * the current menu has with other menus.
+	 * It's optional to fill this
 	 */
-	private AbstractMenu[] switchMenus;
+	private AbstractMenu[] nextMenus;
 
-	public AbstractMenu[] getSwitchMenus() {
-		return switchMenus;
+	public AbstractMenu[] getNextMenus() {
+		return nextMenus;
 	}
 
-	public void setSwitchMenus(AbstractMenu... switchMenus) {
-		this.switchMenus = switchMenus;
+	public void setNextMenus(AbstractMenu... switchMenus) {
+		this.nextMenus = switchMenus;
 	}
 
 	public abstract void show();

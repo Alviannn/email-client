@@ -56,7 +56,7 @@ public class InboxMenu extends AbstractMenu {
 			}
 		} while (choice < 1 || choice > 2);
 
-		ReplyMenu replyMenu = (ReplyMenu) this.getSwitchMenus()[0];
+		ReplyMenu replyMenu = (ReplyMenu) this.getNextMenus()[0];
 		switch (choice) {
 			case 1:
 				replyMenu.setRepliedMail(selectedMail);

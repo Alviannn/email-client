@@ -28,10 +28,10 @@ public class Main {
 		ComposeMailMenu composeMenu = new ComposeMailMenu();
 		ReplyMenu replyMenu = new ReplyMenu();
 
-		mainMenu.setSwitchMenus(loginMenu, registerMenu);
-		loginMenu.setSwitchMenus(dashboardMenu);
-		dashboardMenu.setSwitchMenus(inboxMenu, sentMailMenu, composeMenu);
-		inboxMenu.setSwitchMenus(replyMenu);
+		mainMenu.setNextMenus(loginMenu, registerMenu);
+		loginMenu.setNextMenus(dashboardMenu);
+		dashboardMenu.setNextMenus(inboxMenu, sentMailMenu, composeMenu);
+		inboxMenu.setNextMenus(replyMenu);
 
 		while (true) {
 			User currentUser = shared.getCurrentUser();

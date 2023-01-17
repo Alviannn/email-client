@@ -39,7 +39,7 @@ public class LoginMenu extends AbstractMenu {
 
 		Shared.getInstance().setCurrentUser(foundUser);
 
-		AbstractMenu dashboardMenu = this.getSwitchMenus()[0];
+		AbstractMenu dashboardMenu = this.getNextMenus()[0];
 		dashboardMenu.show();
 	}
 

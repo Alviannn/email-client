@@ -1,17 +1,15 @@
 package dev.gamavi.emailclient.menu;
 
-import java.util.Optional;
-
+import dev.gamavi.emailclient.error.ServiceException;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.model.UserBuilder;
-import dev.gamavi.emailclient.repository.UserRepository;
+import dev.gamavi.emailclient.service.UserService;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class RegisterMenu extends AbstractMenu {
 
-	private final Shared shared = Shared.getInstance();
-	private final UserRepository userRepo = shared.getUserRepo();
+	private final UserService userService = Shared.getInstance().getUserService();
 	
 	@Override
 	public void show() {
@@ -48,7 +46,14 @@ public class RegisterMenu extends AbstractMenu {
 			.setPassword(password)
 			.build();
 
-		userRepo.insert(user);
+		try {
+			userService.register(user);
+			System.out.println("Successfully registered new user.");
+		} catch (ServiceException e) {
+			System.out.println(e.getMessage());
+		}
+
+		Utils.waitForEnter();
 	}
 
 	private Boolean emailUsernameValidation(String emailUsername) {
@@ -67,12 +72,6 @@ public class RegisterMenu extends AbstractMenu {
 				System.out.println("Username should only contains letters, numbers, and periods!");
 				return false;
 			}
-		}
-
-		Optional<User> sameUser = userRepo.findOneById(emailUsername);
-		if (sameUser.isEmpty()) {
-			System.out.println("Username must be unique!");
-			return false;
 		}
 
 		return true;

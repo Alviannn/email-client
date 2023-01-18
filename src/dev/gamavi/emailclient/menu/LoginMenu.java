@@ -1,16 +1,13 @@
 package dev.gamavi.emailclient.menu;
 
-import java.util.Optional;
-
-import dev.gamavi.emailclient.model.User;
-import dev.gamavi.emailclient.repository.UserRepository;
+import dev.gamavi.emailclient.error.ServiceException;
+import dev.gamavi.emailclient.service.UserService;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class LoginMenu extends AbstractMenu {
 
-	private final Shared shared = Shared.getInstance();
-	private final UserRepository userRepo = shared.getUserRepo();
+	private final UserService userService = Shared.getInstance().getUserService();
 
 	@Override
 	public void show() {
@@ -28,21 +25,13 @@ public class LoginMenu extends AbstractMenu {
 		System.out.print("Password: ");
 		passwordString = Utils.SCANNER.nextLine();
 
-		Optional<User> optional = userRepo.findOneById(emailString);
-		if (optional.isEmpty()) {
-			System.out.println("User isn't registered.");
+		try {
+			userService.login(emailString, passwordString);
+		} catch (ServiceException e) {
+			System.out.println(e.getMessage());
 			Utils.waitForEnter();
 			return;
 		}
-
-		User foundUser = optional.get();
-		if (!foundUser.getPassword().equals(passwordString)) {
-			System.out.println("Password doesn't match.");
-			Utils.waitForEnter();
-			return;
-		}
-
-		shared.setCurrentUser(foundUser);
 
 		AbstractMenu dashboardMenu = this.getNextMenus()[0];
 		dashboardMenu.show();

@@ -1,25 +1,23 @@
 package dev.gamavi.emailclient.menu;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import dev.gamavi.emailclient.model.Mail;
 import dev.gamavi.emailclient.model.MailRecipient;
 import dev.gamavi.emailclient.model.User;
-import dev.gamavi.emailclient.repository.MailRecipientRepository;
+import dev.gamavi.emailclient.service.MailService;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class InboxMenu extends AbstractMenu {
 
 	private final Shared shared = Shared.getInstance();
-	private final MailRecipientRepository recipientRepo = shared.getMailRecipientRepo();
+	private final MailService mailService = shared.getMailService();
 
 	@Override
 	public void show() {
-		User currentUser = Shared.getInstance().getCurrentUser();
-		List<MailRecipient> mailRecipients = recipientRepo.findAllByRecipientEmail(currentUser.getEmail());
+		User currentUser = shared.getCurrentUser();
+		List<MailRecipient> mailRecipients = mailService.findReceivedMails(currentUser.getEmail());
 
 		Utils.clearScreen();
 
@@ -33,7 +31,7 @@ public class InboxMenu extends AbstractMenu {
 			return;
 		}
 
-		this.printMailsTable(mailRecipients);
+		mailService.printRecipientMailsTable(mailRecipients);
 		int choice;
 		do {
 			choice = Utils.scanAbsoluteInt("Choose a mail by its number to read ['0' to cancel]: ");
@@ -42,7 +40,9 @@ public class InboxMenu extends AbstractMenu {
 			}
 		} while (choice < 1 || choice > mailRecipients.size());
 
-		Mail selectedMail = openEmail(choice, mailRecipients);
+		MailRecipient selectedRecipient = mailRecipients.get(choice - 1);
+		mailService.openMailAndMarkRead(selectedRecipient);
+
 		System.out.print(
 			"Choose:\n" +
 			"1. Reply\n" +
@@ -58,6 +58,8 @@ public class InboxMenu extends AbstractMenu {
 		} while (choice < 1 || choice > 3);
 
 		ReplyMenu replyMenu = (ReplyMenu) this.getNextMenus()[0];
+		Mail selectedMail = selectedRecipient.getMail();
+
 		switch (choice) {
 			case 1:
 				replyMenu.setRepliedMail(selectedMail);
@@ -71,82 +73,6 @@ public class InboxMenu extends AbstractMenu {
 		}
 
 		replyMenu.show();
-	}
-
-	private Mail openEmail(int index, List<MailRecipient> mailRecipients) {
-		MailRecipient mailRecipient = mailRecipients.get(index - 1);
-		Mail mail = mailRecipient.getMail();
-		List<MailRecipient> currentRecipients = recipientRepo.findAllByMailId(mail.getId());
-
-		StringBuilder ccBuilder = new StringBuilder();
-		StringBuilder recipientBuilder = new StringBuilder();
-
-		for (MailRecipient recipient : currentRecipients) {
-			switch (recipient.getType()) {
-				case NORMAL:
-					recipientBuilder.append(recipient.getRecipient().getDisplayName()).append("; ");
-					break;
-				case CARBON_COPY:
-					ccBuilder.append(recipient.getRecipient().getDisplayName()).append("; ");
-					break;
-				default:
-					break;
-			}
-		}
-
-		System.out.println(
-			"Sender   : " + mail.getSender().getDisplayName() + "\n" +
-			"Recipient: " + recipientBuilder.toString() + "\n" +
-			"CC       : " + ccBuilder.toString() + "\n" +
-			"Subject  : " + mail.getTitle() + "\n" +
-			"Message  :\n" +
-			mail.getMessage() + "\n");
-
-		if (!mailRecipient.isHasRead()) {
-			mailRecipient.setHasRead(true);
-			recipientRepo.update(mailRecipient);
-		}
-
-		return mail;
-	}
-
-	private void printMailsTable(List<MailRecipient> mailRecipients) {
-		User currentUser = Shared.getInstance().getCurrentUser();
-
-		String tableHeader = String.format(
-			"| %-3s | %-40s | %-20s | %-19s |",
-			"No.", "Subject", "Sender", "Date");
-
-		String rowFormat = "| %3s | %-40s | %-20s | %-19s |\n";
-		String coloredRowFormat = "| $y%3s$r | $y%-40s$r | $y%-20s$r | $y%-19s$r |\n"
-			.replaceAll("\\$y", Utils.ANSI_YELLOW)
-			.replaceAll("\\$r", Utils.ANSI_RESET);
-
-		String line = "+-----+------------------------------------------+----------------------+---------------------+";
-
-		long unreadCount = recipientRepo.countUnreadMails(currentUser.getEmail());
-		System.out.printf("Total unread mails: %d\n", unreadCount);
-
-		System.out.println(line);
-		System.out.println(tableHeader);
-		System.out.println(line);
-
-		int count = 0;
-		for (MailRecipient mailRecipient : mailRecipients) {
-			Mail mail = mailRecipient.getMail();
-			User sender = mail.getSender();
-
-			DateFormat formatter = new SimpleDateFormat("dd MMM yyyy - HH:mm");
-			String chosenFormat = mailRecipient.isHasRead() ? rowFormat : coloredRowFormat;
-
-			System.out.printf(
-				chosenFormat,
-				++count,
-				mail.getTitle(),
-				sender.getDisplayName(), formatter.format(mail.getCreatedAt()));
-		}
-
-		System.out.println(line);
 	}
 
 }

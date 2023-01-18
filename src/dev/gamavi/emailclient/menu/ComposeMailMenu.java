@@ -1,28 +1,24 @@
 package dev.gamavi.emailclient.menu;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import dev.gamavi.emailclient.error.ServiceException;
 import dev.gamavi.emailclient.model.Mail;
 import dev.gamavi.emailclient.model.MailBuilder;
-import dev.gamavi.emailclient.model.MailRecipient;
-import dev.gamavi.emailclient.model.MailRecipientBuilder;
-import dev.gamavi.emailclient.model.ReceiveType;
 import dev.gamavi.emailclient.model.User;
-import dev.gamavi.emailclient.repository.MailRecipientRepository;
-import dev.gamavi.emailclient.repository.MailRepository;
-import dev.gamavi.emailclient.repository.UserRepository;
+import dev.gamavi.emailclient.service.MailService;
+import dev.gamavi.emailclient.service.UserService;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class ComposeMailMenu extends AbstractMenu {
 
 	private final Shared shared = Shared.getInstance();
-	private final UserRepository userRepo = shared.getUserRepo();
-	private final MailRepository mailRepo = shared.getMailRepo();
-	private final MailRecipientRepository recipientRepo = shared.getMailRecipientRepo();
+
+	private final MailService mailService = shared.getMailService();
+	private final UserService userService = shared.getUserService();
 
 	@Override
 	public void show() {
@@ -60,38 +56,7 @@ public class ComposeMailMenu extends AbstractMenu {
 			.setSender(currentUser)
 			.build();
 
-		mailRepo.insert(mail);
-
-		for (User user : targetUsers) {
-			MailRecipient recipient = new MailRecipientBuilder()
-				.setMail(mail)
-				.setHasRead(false)
-				.setRecipient(user)
-				.setType(ReceiveType.NORMAL)
-				.build();
-
-			recipientRepo.insert(recipient);
-		}
-		for (User user : ccUsers) {
-			MailRecipient recipient = new MailRecipientBuilder()
-				.setMail(mail)
-				.setHasRead(false)
-				.setRecipient(user)
-				.setType(ReceiveType.CARBON_COPY)
-				.build();
-
-			recipientRepo.insert(recipient);
-		}
-		for (User user : bccUsers) {
-			MailRecipient recipient = new MailRecipientBuilder()
-				.setMail(mail)
-				.setHasRead(false)
-				.setRecipient(user)
-				.setType(ReceiveType.BLIND_CARBON_COPY)
-				.build();
-
-			recipientRepo.insert(recipient);
-		}
+		mailService.composeAndSend(mail, targetUsers, ccUsers, bccUsers);
 	}
 
 	private List<User> scanRecipients(Scanner scanner) throws Exception {
@@ -110,8 +75,8 @@ public class ComposeMailMenu extends AbstractMenu {
 			}
 
 			try {
-				recipientList = Utils.parseEmailInput(line, userRepo);
-			} catch (InputMismatchException e) {
+				recipientList = userService.parseMailAddresses(line);
+			} catch (ServiceException e) {
 				System.out.println(e.getMessage());
 				continue;
 			}
@@ -189,8 +154,8 @@ public class ComposeMailMenu extends AbstractMenu {
 			}
 
 			try {
-				ccUsers = Utils.parseEmailInput(line, userRepo);
-			} catch (InputMismatchException e) {
+				ccUsers = userService.parseMailAddresses(line);
+			} catch (ServiceException e) {
 				System.out.println(e.getMessage());
 				continue;
 			}
@@ -222,8 +187,8 @@ public class ComposeMailMenu extends AbstractMenu {
 			}
 
 			try {
-				bccUsers = Utils.parseEmailInput(line, userRepo);
-			} catch (InputMismatchException e) {
+				bccUsers = userService.parseMailAddresses(line);
+			} catch (ServiceException e) {
 				System.out.println(e.getMessage());
 				continue;
 			}

@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.model;
 
+import java.util.Optional;
+
 public class MailBuilder implements IBuilder<Mail> {
 
 	private Mail mail;
@@ -40,7 +42,7 @@ public class MailBuilder implements IBuilder<Mail> {
 		return mail.getSender();
 	}
 
-	public Mail getReplyTo() {
+	public Optional<Mail> getReplyTo() {
 		return mail.getReplyTo();
 	}
 

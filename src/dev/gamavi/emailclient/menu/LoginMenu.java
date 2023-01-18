@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.menu;
 
+import java.util.Optional;
+
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.repository.UserRepository;
 import dev.gamavi.emailclient.shared.Shared;
@@ -26,12 +28,14 @@ public class LoginMenu extends AbstractMenu {
 		System.out.print("Password: ");
 		passwordString = Utils.SCANNER.nextLine();
 
-		User foundUser = userRepo.findOne(emailString);
-		if (foundUser == null) {
+		Optional<User> optional = userRepo.findOneById(emailString);
+		if (optional.isEmpty()) {
 			System.out.println("User isn't registered.");
 			Utils.waitForEnter();
 			return;
 		}
+
+		User foundUser = optional.get();
 		if (!foundUser.getPassword().equals(passwordString)) {
 			System.out.println("Password doesn't match.");
 			Utils.waitForEnter();

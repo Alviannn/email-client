@@ -7,14 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLHelper {
-	
+
 	private final String host;
 	private final int port;
 	private final String database;
 	private final String username, password;
-	
+
 	private Connection connection;
-	
+
 	public SQLHelper(String host, int port, String database, String username, String password) {
 		super();
 		this.host = host;
@@ -44,7 +44,7 @@ public class SQLHelper {
             throw new RuntimeException("Failed to disconnect MySQL connection");
         }
     }
-    
+
     public PreparedStatement prepare(String query, Object...args) throws SQLException {
     	PreparedStatement statement = connection.prepareStatement(query);
         for (int i = 0; i < args.length; i++) {

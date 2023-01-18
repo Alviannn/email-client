@@ -3,6 +3,7 @@ package dev.gamavi.emailclient.shared;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import dev.gamavi.emailclient.model.User;
@@ -94,11 +95,8 @@ public class Utils {
 
 		String[] emails = input.split(";");
 		for (String email : emails) {
-			User user = repo.findOne(email);
-			if (user == null) {
-				throw new InputMismatchException("Cannot find user with email '" + email + "'.");
-			}
-
+			Optional<User> optional = repo.findOneById(email);
+			User user = optional.orElseThrow(() -> new InputMismatchException("Cannot find user with email '" + email + "'."));
 			users.add(user);
 		}
 

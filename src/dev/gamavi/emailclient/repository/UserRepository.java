@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.model.UserBuilder;
@@ -81,19 +82,19 @@ public class UserRepository extends AbstractRepository<User, String> {
 	}
 
 	@Override
-	public User findOne(String id) {
+	public Optional<User> findOneById(String id) {
 		String query = "SELECT * FROM users WHERE email = ? AND deleted_at IS NULL";
 		try (ResultSet rs = this.getHelper().getResults(query, id)) {
 			if (!rs.next()) {
-				return null;
+				return Optional.empty();
 			}
 
-			return this.mapToObject(rs);
+			return Optional.of(this.mapToObject(rs));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	@Override

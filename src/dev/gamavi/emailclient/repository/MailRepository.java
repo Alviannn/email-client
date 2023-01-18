@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import dev.gamavi.emailclient.model.Mail;
 import dev.gamavi.emailclient.model.MailBuilder;
@@ -22,9 +23,9 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	public void insert(Mail instance) {
 		try (Closer closer = new Closer()) {
 			Long replyToMailId = null;
-			Mail replyTo = instance.getReplyTo();
-			if (replyTo != null) {
-				replyToMailId = replyTo.getId();
+			Optional<Mail> replyTo = instance.getReplyTo();
+			if (replyTo.isPresent()) {
+				replyToMailId = replyTo.get().getId();
 			}
 
 			this.getHelper().execute(
@@ -91,19 +92,19 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 	}
 
 	@Override
-	public Mail findOne(Long id) {
+	public Optional<Mail> findOneById(Long id) {
 		String query = "SELECT * FROM mails WHERE id = ? AND deleted_at IS NULL";
 		try (ResultSet rs = this.getHelper().getResults(query, id)) {
 			if (!rs.next()) {
-				return null;
+				return Optional.empty();
 			}
 
-			return this.mapToObject(rs);
+			return Optional.of(this.mapToObject(rs));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	@Override
@@ -168,10 +169,11 @@ public class MailRepository extends AbstractRepository<Mail, Long> {
 		String senderEmail = rs.getString("sender");
 		Long replyToMailId = (Long) rs.getObject("reply_to");
 
-		User user = userRepo.findOne(senderEmail);
+		User user = userRepo.findOneById(senderEmail).get();
 		Mail replyTo = null;
+
 		if (replyToMailId != null) {
-			replyTo = this.findOne(replyToMailId);
+			replyTo = this.findOneById(replyToMailId).get();
 		}
 
 		Mail mail = new MailBuilder()

@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.menu;
 
+import java.util.Optional;
+
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.model.UserBuilder;
 import dev.gamavi.emailclient.repository.UserRepository;
@@ -67,8 +69,8 @@ public class RegisterMenu extends AbstractMenu {
 			}
 		}
 
-		User sameUser = userRepo.findOne(emailUsername);
-		if (sameUser != null) {
+		Optional<User> sameUser = userRepo.findOneById(emailUsername);
+		if (sameUser.isEmpty()) {
 			System.out.println("Username must be unique!");
 			return false;
 		}

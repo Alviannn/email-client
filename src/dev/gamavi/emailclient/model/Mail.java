@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.model;
 
+import java.util.Optional;
+
 public class Mail extends BaseModel {
 
 	private Long id;
@@ -7,10 +9,7 @@ public class Mail extends BaseModel {
 	private String message;
 
 	private User sender;
-	/**
-	 * The email being replied to, it's {@code nullable}
-	 */
-	private Mail replyTo;
+	private Optional<Mail> replyTo;
 
 	public Long getId() {
 		return id;
@@ -28,7 +27,7 @@ public class Mail extends BaseModel {
 		return sender;
 	}
 
-	public Mail getReplyTo() {
+	public Optional<Mail> getReplyTo() {
 		return replyTo;
 	}
 
@@ -49,7 +48,7 @@ public class Mail extends BaseModel {
 	}
 
 	public void setReplyTo(Mail replyTo) {
-		this.replyTo = replyTo;
+		this.replyTo = Optional.ofNullable(replyTo);
 	}
 
 }

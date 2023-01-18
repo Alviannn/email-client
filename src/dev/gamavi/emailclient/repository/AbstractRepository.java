@@ -3,6 +3,7 @@ package dev.gamavi.emailclient.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import dev.gamavi.emailclient.model.BaseModel;
 import dev.gamavi.emailclient.shared.SQLHelper;
@@ -25,7 +26,7 @@ public abstract class AbstractRepository<Type extends BaseModel, ID> {
 
 	public abstract void delete(ID id);
 
-	public abstract Type findOne(ID id);
+	public abstract Optional<Type> findOneById(ID id);
 
 	public abstract List<Type> findAll();
 

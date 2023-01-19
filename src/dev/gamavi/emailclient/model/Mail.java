@@ -11,6 +11,10 @@ public class Mail extends BaseModel {
 	private User sender;
 	private Optional<Mail> replyTo;
 
+	public Mail() {
+		this.replyTo = Optional.empty();
+	}
+
 	public Long getId() {
 		return id;
 	}

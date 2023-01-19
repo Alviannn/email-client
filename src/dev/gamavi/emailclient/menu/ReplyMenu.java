@@ -1,5 +1,7 @@
 package dev.gamavi.emailclient.menu;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import dev.gamavi.emailclient.model.Mail;
@@ -10,16 +12,17 @@ import dev.gamavi.emailclient.model.ReceiveType;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.repository.MailRecipientRepository;
 import dev.gamavi.emailclient.repository.MailRepository;
+import dev.gamavi.emailclient.service.MailService;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
 
 public class ReplyMenu extends AbstractMenu {
 
 	private Mail repliedMail;
+	private boolean isReplyAll;
 
 	private final Shared shared = Shared.getInstance();
-	private final MailRepository mailRepo = shared.getMailRepo();
-	private final MailRecipientRepository recipientRepo = shared.getMailRecipientRepo();
+	private final MailService mailService = shared.getMailService();
 
 	@Override
 	public void show() {
@@ -54,16 +57,21 @@ public class ReplyMenu extends AbstractMenu {
 			.setTitle("RE: " + repliedMail.getTitle())
 			.build();
 
-		mailRepo.insert(mail);
+		List<MailRecipient> replyRecipients = new ArrayList<>();
+		List<MailRecipient> previousRecipients = mailService.findMailRecipients(repliedMail.getId());
 
-		MailRecipient recipient = new MailRecipientBuilder()
-			.setHasRead(false)
-			.setMail(mail)
-			.setRecipient(repliedSender)
-			.setType(ReceiveType.NORMAL)
-			.build();
+		// for (MailRecipient recipient : previousRecipients) {
+		// 	replyRecipients = 
+		// }
 
-		recipientRepo.insert(recipient);
+		// MailRecipient recipient = new MailRecipientBuilder()
+		// 	.setHasRead(false)
+		// 	.setMail(mail)
+		// 	.setRecipient(repliedSender)
+		// 	.setType(ReceiveType.NORMAL)
+		// 	.build();
+
+		// recipientRepo.insert(recipient);
 	}
 
 	private String scanContent(Scanner scanner) throws Exception {
@@ -96,8 +104,16 @@ public class ReplyMenu extends AbstractMenu {
 		return repliedMail;
 	}
 
+	public boolean isReplyAll() {
+		return isReplyAll;
+	}
+
 	public void setRepliedMail(Mail repliedMail) {
 		this.repliedMail = repliedMail;
+	}
+
+	public void setIsReplyAll(boolean isReplyAll) {
+		this.isReplyAll = isReplyAll;
 	}
 
 }

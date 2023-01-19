@@ -63,16 +63,18 @@ public class InboxMenu extends AbstractMenu {
 		switch (choice) {
 			case 1:
 				replyMenu.setRepliedMail(selectedMail);
+				replyMenu.show();
 				break;
 			case 2:
-				// todo: add reply to all (meaning to all CC'd users)
+				replyMenu.setRepliedMail(selectedMail);
+				replyMenu.setIsReplyAll(true);
+
+				replyMenu.show();
 				break;
 			case 3:
 				// todo: add view previous mail
 				break;
 		}
-
-		replyMenu.show();
 	}
 
 }

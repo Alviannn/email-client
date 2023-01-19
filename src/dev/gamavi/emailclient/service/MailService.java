@@ -101,20 +101,18 @@ public class MailService extends AbstractService {
 
 		int count = 0;
 		for (Mail mail : sentMails) {
-			List<MailRecipient> mailRecipients = this.findMailRecipients(mail.getId());
+			MailRecipient firstRecipient = this.findMailRecipients(mail.getId()).get(0);
 
-			for (MailRecipient mailRecipient : mailRecipients) {
-				User recipient = mailRecipient.getRecipient();
-				DateFormat formatter = new SimpleDateFormat("dd MMM yyyy - HH:mm");
+			User recipient = firstRecipient.getRecipient();
+			DateFormat formatter = new SimpleDateFormat("dd MMM yyyy - HH:mm");
 
-				System.out.printf(
-					rowFormat,
-					++count,
-					mail.getTitle(),
-					recipient.getDisplayName(),
-					formatter.format(mail.getCreatedAt())
-				);
-			}
+			System.out.printf(
+				rowFormat,
+				++count,
+				mail.getTitle(),
+				recipient.getDisplayName(),
+				formatter.format(mail.getCreatedAt())
+			);
 		}
 
 		System.out.println(line);

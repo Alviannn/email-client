@@ -2,7 +2,7 @@ package dev.gamavi.emailclient.model;
 
 import java.util.Optional;
 
-public class Mail extends AbstractModel {
+public class Mail extends AbstractModel implements Cloneable {
 
 	private Long id;
 	private String title;
@@ -55,4 +55,18 @@ public class Mail extends AbstractModel {
 		this.replyTo = Optional.ofNullable(replyTo);
 	}
 
+	@Override
+	public Mail clone() {
+		try {
+			Mail clone = (Mail) super.clone();
+
+			clone.setId(null);
+			clone.setCreatedAt(null);
+			clone.setUpdatedAt(null);
+
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
+	}
 }

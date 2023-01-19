@@ -2,14 +2,7 @@ package dev.gamavi.emailclient;
 
 import java.sql.SQLException;
 
-import dev.gamavi.emailclient.menu.ComposeMailMenu;
-import dev.gamavi.emailclient.menu.DashboardMenu;
-import dev.gamavi.emailclient.menu.LoginMenu;
-import dev.gamavi.emailclient.menu.MainMenu;
-import dev.gamavi.emailclient.menu.RegisterMenu;
-import dev.gamavi.emailclient.menu.SentMailMenu;
-import dev.gamavi.emailclient.menu.ReplyMenu;
-import dev.gamavi.emailclient.menu.InboxMenu;
+import dev.gamavi.emailclient.menu.*;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.shared.Shared;
 
@@ -27,11 +20,12 @@ public class Main {
 		SentMailMenu sentMailMenu = new SentMailMenu();
 		ComposeMailMenu composeMenu = new ComposeMailMenu();
 		ReplyMenu replyMenu = new ReplyMenu();
+		ForwardMailMenu forwardMailMenu = new ForwardMailMenu();
 
 		mainMenu.setNextMenus(loginMenu, registerMenu);
 		loginMenu.setNextMenus(dashboardMenu);
 		dashboardMenu.setNextMenus(inboxMenu, sentMailMenu, composeMenu);
-		inboxMenu.setNextMenus(replyMenu);
+		inboxMenu.setNextMenus(replyMenu, forwardMailMenu);
 
 		while (true) {
 			User currentUser = shared.getCurrentUser();

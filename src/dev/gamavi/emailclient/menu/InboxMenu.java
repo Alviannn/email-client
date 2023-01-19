@@ -47,7 +47,8 @@ public class InboxMenu extends AbstractMenu {
 			"Choose:\n" +
 			"1. Reply\n" +
 			"2. Reply to all\n" +
-			"3. View replied mail\n" +
+			"3. Forward mail\n" +
+			"4. View replied mail\n" +
 			"0. Back to dashboard\n");
 
 		do {
@@ -58,6 +59,7 @@ public class InboxMenu extends AbstractMenu {
 		} while (choice < 1 || choice > 3);
 
 		ReplyMenu replyMenu = (ReplyMenu) this.getNextMenus()[0];
+		ForwardMailMenu forwardMailMenu = (ForwardMailMenu) this.getNextMenus()[1];
 		Mail selectedMail = selectedRecipient.getMail();
 
 		switch (choice) {
@@ -72,6 +74,10 @@ public class InboxMenu extends AbstractMenu {
 				replyMenu.show();
 				break;
 			case 3:
+				forwardMailMenu.setClonedMail(selectedMail.clone());
+				forwardMailMenu.show();
+				break;
+			case 4:
 				// todo: add view previous mail
 				break;
 		}

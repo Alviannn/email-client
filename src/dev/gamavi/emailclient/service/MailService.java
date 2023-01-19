@@ -3,10 +3,10 @@ package dev.gamavi.emailclient.service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Scanner;
 
-import dev.gamavi.emailclient.model.Mail;
-import dev.gamavi.emailclient.model.MailRecipient;
-import dev.gamavi.emailclient.model.User;
+import dev.gamavi.emailclient.error.ServiceException;
+import dev.gamavi.emailclient.model.*;
 import dev.gamavi.emailclient.repository.MailRecipientRepository;
 import dev.gamavi.emailclient.repository.MailRepository;
 import dev.gamavi.emailclient.shared.Shared;
@@ -16,6 +16,9 @@ public class MailService extends AbstractService {
 
 	private final MailRecipientRepository recipientRepo;
 	private final MailRepository mailRepo;
+
+	//TODO: Might wanna tidy up this one:
+	private final UserService userService = shared.getUserService();
 
 	public MailService(Shared shared) {
 		super(shared);
@@ -158,4 +161,37 @@ public class MailService extends AbstractService {
 		}
 	}
 
+	public void scanRecipients(Scanner scanner, List<MailRecipient> recipientList) throws Exception {
+		do {
+			System.out.print("Recipient(s) address ['0' to cancel, separate by semicolon ';']: ");
+			String line = scanner.nextLine();
+
+			if (line.isEmpty()) {
+				System.out.println("The mail recipient cannot be empty.");
+				continue;
+			}
+			if (line.equals("0")) {
+				throw new Exception();
+			}
+
+			try {
+				List<User> userList = userService.parseMailAddresses(line);
+
+				for (User user : userList) {
+					MailRecipient recipient = new MailRecipientBuilder()
+							.setRecipient(user)
+							.setHasRead(false)
+							.setType(ReceiveType.NORMAL)
+							.build();
+
+					recipientList.add(recipient);
+				}
+			} catch (ServiceException e) {
+				System.out.println(e.getMessage());
+				continue;
+			}
+
+			break;
+		} while (true);
+	}
 }

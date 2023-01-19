@@ -41,6 +41,10 @@ public class MailService extends AbstractService {
 		return mailRepo.findAllBySenderEmail(senderEmail);
 	}
 
+	public List<MailRecipient> findMailRecipients(Long mailId) {
+		return recipientRepo.findAllByMailId(mailId);
+	}
+
 	public void printRecipientMailsTable(List<MailRecipient> mailRecipients) {
 		User currentUser = Shared.getInstance().getCurrentUser();
 
@@ -81,8 +85,6 @@ public class MailService extends AbstractService {
 	}
 
 	public void printSentMailsTable(List<Mail> sentMails) {
-		MailRecipientRepository recipientRepo = shared.getMailRecipientRepo();
-
 		String tableHeader = String.format(
 			"| %-3s | %-40s | %-20s | %-19s |",
 			"No.", "Subject", "Recipient", "Date");
@@ -99,7 +101,7 @@ public class MailService extends AbstractService {
 
 		int count = 0;
 		for (Mail mail : sentMails) {
-			List<MailRecipient> mailRecipients = recipientRepo.findAllByMailId(mail.getId());
+			List<MailRecipient> mailRecipients = this.findMailRecipients(mail.getId());
 
 			for (MailRecipient mailRecipient : mailRecipients) {
 				User recipient = mailRecipient.getRecipient();
@@ -119,7 +121,7 @@ public class MailService extends AbstractService {
 	}
 
 	public void openMail(Mail mail) {
-		List<MailRecipient> currentRecipients = recipientRepo.findAllByMailId(mail.getId());
+		List<MailRecipient> currentRecipients = this.findMailRecipients(mail.getId());
 
 		StringBuilder ccBuilder = new StringBuilder();
 		StringBuilder recipientBuilder = new StringBuilder();

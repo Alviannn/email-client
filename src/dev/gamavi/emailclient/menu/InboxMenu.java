@@ -11,6 +11,8 @@ import dev.gamavi.emailclient.shared.Utils;
 
 public class InboxMenu extends AbstractMenu {
 
+	// todo: separate inbox menu and read menu
+
 	private final Shared shared = Shared.getInstance();
 	private final MailService mailService = shared.getMailService();
 

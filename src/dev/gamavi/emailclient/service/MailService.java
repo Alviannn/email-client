@@ -48,6 +48,14 @@ public class MailService extends AbstractService {
 		return recipientRepo.findAllByMailId(mailId);
 	}
 
+	public void deleteMail(Long mailId) {
+		mailRepo.delete(mailId);
+	}
+
+	public void deleteMailRecipient(Long mailRecipientId) {
+		recipientRepo.delete(mailRecipientId);
+	}
+
 	public void printRecipientMailsTable(List<MailRecipient> mailRecipients) {
 		User currentUser = Shared.getInstance().getCurrentUser();
 

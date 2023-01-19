@@ -10,8 +10,6 @@ import dev.gamavi.emailclient.model.MailRecipient;
 import dev.gamavi.emailclient.model.MailRecipientBuilder;
 import dev.gamavi.emailclient.model.ReceiveType;
 import dev.gamavi.emailclient.model.User;
-import dev.gamavi.emailclient.repository.MailRecipientRepository;
-import dev.gamavi.emailclient.repository.MailRepository;
 import dev.gamavi.emailclient.service.MailService;
 import dev.gamavi.emailclient.shared.Shared;
 import dev.gamavi.emailclient.shared.Utils;
@@ -58,20 +56,37 @@ public class ReplyMenu extends AbstractMenu {
 			.build();
 
 		List<MailRecipient> replyRecipients = new ArrayList<>();
-		List<MailRecipient> previousRecipients = mailService.findMailRecipients(repliedMail.getId());
 
-		// for (MailRecipient recipient : previousRecipients) {
-		// 	replyRecipients = 
-		// }
+		MailRecipient repliedRecipient = new MailRecipientBuilder()
+			.setHasRead(false)
+			.setMail(mail)
+			.setRecipient(repliedSender)
+			.setType(ReceiveType.NORMAL)
+			.build();
+		replyRecipients.add(repliedRecipient);
 
-		// MailRecipient recipient = new MailRecipientBuilder()
-		// 	.setHasRead(false)
-		// 	.setMail(mail)
-		// 	.setRecipient(repliedSender)
-		// 	.setType(ReceiveType.NORMAL)
-		// 	.build();
+		if (isReplyAll) {
+			List<MailRecipient> previousRecipients = mailService.findMailRecipients(repliedMail.getId());
 
-		// recipientRepo.insert(recipient);
+			for (MailRecipient recipient : previousRecipients) {
+				String recipientEmail = recipient.getRecipient().getEmail();
+
+				if (recipient.getType() == ReceiveType.BLIND_CARBON_COPY) {
+					continue;
+				}
+				if (recipientEmail.equals(currentUser.getEmail())) {
+					continue;
+				}
+
+				MailRecipient cloned = recipient.clone();
+				cloned.setMail(mail);
+				cloned.setHasRead(false);
+
+				replyRecipients.add(cloned);
+			}
+		}
+
+		mailService.composeAndSend(mail, replyRecipients);
 	}
 
 	private String scanContent(Scanner scanner) throws Exception {

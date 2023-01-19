@@ -1,6 +1,6 @@
 package dev.gamavi.emailclient.model;
 
-public class MailRecipient extends AbstractModel {
+public class MailRecipient extends AbstractModel implements Cloneable {
 
 	private Long id;
 	private Mail mail;
@@ -47,6 +47,25 @@ public class MailRecipient extends AbstractModel {
 
 	public void setHasRead(boolean hasRead) {
 		this.hasRead = hasRead;
+	}
+
+	@Override
+	public MailRecipient clone() {
+		MailRecipient cloned = null;
+
+		try {
+			cloned = (MailRecipient) super.clone();
+
+			// `id`, `created_at`, and `updated_at` fields are not to be copied
+			// because they are strongly connected to the database.
+			cloned.setId(null);
+			cloned.setCreatedAt(null);
+			cloned.setUpdatedAt(null);
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		return cloned;
 	}
 
 }

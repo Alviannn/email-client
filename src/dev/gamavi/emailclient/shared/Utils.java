@@ -1,13 +1,7 @@
 package dev.gamavi.emailclient.shared;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
-
-import dev.gamavi.emailclient.model.User;
-import dev.gamavi.emailclient.repository.UserRepository;
 
 public class Utils {
 
@@ -77,30 +71,6 @@ public class Utils {
 	public static void waitForEnter() {
 		System.out.print("Press enter to continue...");
 		SCANNER.nextLine();
-	}
-
-	/**
-	 * In this application, we need to scan email inputs
-	 * from the user for something like composing an email.
-	 * <p>
-	 * It's here since we may always use this specific functionality
-	 * to parse such as 'email1;email2' inputs.
-	 *
-	 * @param input The email input (for the recipients, cc, bcc, etc.) separated by ';'.
-	 * @param repo The user repository, will be used to validate the email exisitence.
-	 * @throws InputMismatchException When an email doesn't exists within the database.
-	 */
-	public static List<User> parseEmailInput(String input, UserRepository repo) throws InputMismatchException {
-		List<User> users = new ArrayList<>();
-
-		String[] emails = input.split(";");
-		for (String email : emails) {
-			Optional<User> optional = repo.findOneById(email);
-			User user = optional.orElseThrow(() -> new InputMismatchException("Cannot find user with email '" + email + "'."));
-			users.add(user);
-		}
-
-		return users;
 	}
 
 }

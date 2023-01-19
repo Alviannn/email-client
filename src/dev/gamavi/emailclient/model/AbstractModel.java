@@ -2,7 +2,7 @@ package dev.gamavi.emailclient.model;
 
 import java.sql.Timestamp;
 
-public abstract class BaseModel {
+public abstract class AbstractModel {
 
 	private Timestamp createdAt;
 	private Timestamp updatedAt;

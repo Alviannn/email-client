@@ -2,7 +2,7 @@ package dev.gamavi.emailclient.model;
 
 import java.util.Optional;
 
-public class Mail extends BaseModel {
+public class Mail extends AbstractModel {
 
 	private Long id;
 	private String title;

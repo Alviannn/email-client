@@ -1,6 +1,6 @@
 package dev.gamavi.emailclient.model;
 
-public class MailRecipient extends BaseModel {
+public class MailRecipient extends AbstractModel {
 
 	private Long id;
 	private Mail mail;

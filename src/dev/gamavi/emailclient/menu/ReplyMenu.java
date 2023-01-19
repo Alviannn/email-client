@@ -28,8 +28,6 @@ public class ReplyMenu extends AbstractMenu {
 
 		Scanner scan = Utils.SCANNER;
 
-		// todo: output the "replied mail" to be the user's reference
-
 		User currentUser = shared.getCurrentUser();
 		User repliedSender = repliedMail.getSender();
 		System.out.println("Replying to: " + repliedSender.getEmail());

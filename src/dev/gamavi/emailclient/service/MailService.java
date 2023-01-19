@@ -17,14 +17,14 @@ public class MailService extends AbstractService {
 	private final MailRecipientRepository recipientRepo;
 	private final MailRepository mailRepo;
 
-	//TODO: Might wanna tidy up this one:
-	private final UserService userService = shared.getUserService();
+	private final UserService userService;
 
 	public MailService(Shared shared) {
 		super(shared);
 
 		this.recipientRepo = shared.getMailRecipientRepo();
 		this.mailRepo = shared.getMailRepo();
+		this.userService = shared.getUserService();
 	}
 
 	public void composeAndSend(Mail mail, List<MailRecipient> recipientList) {

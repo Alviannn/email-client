@@ -7,6 +7,9 @@ import java.util.Scanner;
 import dev.gamavi.emailclient.error.ServiceException;
 import dev.gamavi.emailclient.model.Mail;
 import dev.gamavi.emailclient.model.MailBuilder;
+import dev.gamavi.emailclient.model.MailRecipient;
+import dev.gamavi.emailclient.model.MailRecipientBuilder;
+import dev.gamavi.emailclient.model.ReceiveType;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.service.MailService;
 import dev.gamavi.emailclient.service.UserService;
@@ -29,15 +32,18 @@ public class ComposeMailMenu extends AbstractMenu {
 			"Compose Mail Menu\n" +
 			"-----------------------\n");
 
-		List<User> targetUsers, ccUsers, bccUsers;
 		String subject, content;
 		User currentUser = shared.getCurrentUser();
+		List<MailRecipient> recipientList = new ArrayList<>();
 
 		try {
-			targetUsers = this.scanRecipients(scanner);
+			this.scanRecipients(scanner, recipientList);
+
 			subject = this.scanSubject(scanner);
-			ccUsers = this.scanCarbonCopy(scanner);
-			bccUsers = this.scanBlindCarbonCopy(scanner);
+
+			this.scanCarbonCopy(scanner, recipientList);
+			this.scanBlindCarbonCopy(scanner, recipientList);
+
 			content = this.scanContent(scanner);
 		} catch (Exception e) {
 			// forced exception to indicate on cancelling the whole menu
@@ -56,12 +62,10 @@ public class ComposeMailMenu extends AbstractMenu {
 			.setSender(currentUser)
 			.build();
 
-		mailService.composeAndSend(mail, targetUsers, ccUsers, bccUsers);
+		mailService.composeAndSend(mail, recipientList);
 	}
 
-	private List<User> scanRecipients(Scanner scanner) throws Exception {
-		List<User> recipientList;
-
+	private void scanRecipients(Scanner scanner, List<MailRecipient> recipientList) throws Exception {
 		do {
 			System.out.print("Recipient(s) address ['0' to cancel, separate by semicolon ';']: ");
 			String line = scanner.nextLine();
@@ -75,7 +79,17 @@ public class ComposeMailMenu extends AbstractMenu {
 			}
 
 			try {
-				recipientList = userService.parseMailAddresses(line);
+				List<User> userList = userService.parseMailAddresses(line);
+
+				for (User user : userList) {
+					MailRecipient recipient = new MailRecipientBuilder()
+						.setRecipient(user)
+						.setHasRead(false)
+						.setType(ReceiveType.NORMAL)
+						.build();
+
+					recipientList.add(recipient);
+				}
 			} catch (ServiceException e) {
 				System.out.println(e.getMessage());
 				continue;
@@ -83,8 +97,6 @@ public class ComposeMailMenu extends AbstractMenu {
 
 			break;
 		} while (true);
-
-		return recipientList;
 	}
 
 	private String scanSubject(Scanner scanner) throws Exception {
@@ -133,12 +145,10 @@ public class ComposeMailMenu extends AbstractMenu {
 		return contentBuilder.toString();
 	}
 
-	private List<User> scanCarbonCopy(Scanner scanner) throws Exception {
-		List<User> ccUsers = new ArrayList<>();
+	private void scanCarbonCopy(Scanner scanner, List<MailRecipient> recipientList) throws Exception {
 		boolean useCC = Utils.scanAbsoluteConfirm("Do you want to include a CC (Carbon Copy) [Y/N]: ");
-
 		if (!useCC) {
-			return ccUsers;
+			return;
 		}
 
 		do {
@@ -154,7 +164,17 @@ public class ComposeMailMenu extends AbstractMenu {
 			}
 
 			try {
-				ccUsers = userService.parseMailAddresses(line);
+				List<User> userList = userService.parseMailAddresses(line);
+
+				for (User user : userList) {
+					MailRecipient recipient = new MailRecipientBuilder()
+						.setRecipient(user)
+						.setHasRead(false)
+						.setType(ReceiveType.CARBON_COPY)
+						.build();
+
+					recipientList.add(recipient);
+				}
 			} catch (ServiceException e) {
 				System.out.println(e.getMessage());
 				continue;
@@ -162,16 +182,12 @@ public class ComposeMailMenu extends AbstractMenu {
 
 			break;
 		} while (true);
-
-		return ccUsers;
 	}
 
-	private List<User> scanBlindCarbonCopy(Scanner scanner) throws Exception {
-		List<User> bccUsers = new ArrayList<>();
+	private void scanBlindCarbonCopy(Scanner scanner, List<MailRecipient> recipientList) throws Exception {
 		boolean useBCC = Utils.scanAbsoluteConfirm("Do you want to include a BCC (Blind Carbon Copy) [Y/N]: ");
-
 		if (!useBCC) {
-			return bccUsers;
+			return;
 		}
 
 		do {
@@ -187,7 +203,17 @@ public class ComposeMailMenu extends AbstractMenu {
 			}
 
 			try {
-				bccUsers = userService.parseMailAddresses(line);
+				List<User> userList = userService.parseMailAddresses(line);
+
+				for (User user : userList) {
+					MailRecipient recipient = new MailRecipientBuilder()
+						.setRecipient(user)
+						.setHasRead(false)
+						.setType(ReceiveType.BLIND_CARBON_COPY)
+						.build();
+
+					recipientList.add(recipient);
+				}
 			} catch (ServiceException e) {
 				System.out.println(e.getMessage());
 				continue;
@@ -195,8 +221,6 @@ public class ComposeMailMenu extends AbstractMenu {
 
 			break;
 		} while (true);
-
-		return bccUsers;
 	}
 
 }

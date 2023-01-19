@@ -6,8 +6,6 @@ import java.util.List;
 
 import dev.gamavi.emailclient.model.Mail;
 import dev.gamavi.emailclient.model.MailRecipient;
-import dev.gamavi.emailclient.model.MailRecipientBuilder;
-import dev.gamavi.emailclient.model.ReceiveType;
 import dev.gamavi.emailclient.model.User;
 import dev.gamavi.emailclient.repository.MailRecipientRepository;
 import dev.gamavi.emailclient.repository.MailRepository;
@@ -26,37 +24,11 @@ public class MailService extends AbstractService {
 		this.mailRepo = shared.getMailRepo();
 	}
 
-	public void composeAndSend(Mail mail, List<User> targetUsers, List<User> ccUsers, List<User> bccUsers) {
+	public void composeAndSend(Mail mail, List<MailRecipient> recipientList) {
 		mailRepo.insert(mail);
 
-		for (User user : targetUsers) {
-			MailRecipient recipient = new MailRecipientBuilder()
-				.setMail(mail)
-				.setHasRead(false)
-				.setRecipient(user)
-				.setType(ReceiveType.NORMAL)
-				.build();
-
-			recipientRepo.insert(recipient);
-		}
-		for (User user : ccUsers) {
-			MailRecipient recipient = new MailRecipientBuilder()
-				.setMail(mail)
-				.setHasRead(false)
-				.setRecipient(user)
-				.setType(ReceiveType.CARBON_COPY)
-				.build();
-
-			recipientRepo.insert(recipient);
-		}
-		for (User user : bccUsers) {
-			MailRecipient recipient = new MailRecipientBuilder()
-				.setMail(mail)
-				.setHasRead(false)
-				.setRecipient(user)
-				.setType(ReceiveType.BLIND_CARBON_COPY)
-				.build();
-
+		for (MailRecipient recipient : recipientList) {
+			recipient.setMail(mail);
 			recipientRepo.insert(recipient);
 		}
 	}

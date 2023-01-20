@@ -20,7 +20,6 @@ public class ReadMailMenu extends AbstractMenu {
 			"1. Reply\n" +
 			"2. Reply to all\n" +
 			"3. Forward mail\n" +
-			"4. View replied mail\n" +
 			"0. Back to dashboard\n");
 
 		int choice;
@@ -49,9 +48,6 @@ public class ReadMailMenu extends AbstractMenu {
 			case 3:
 				forwardMailMenu.setClonedMail(selectedMail.clone());
 				forwardMailMenu.show();
-				break;
-			case 4:
-				// todo: add view previous mail
 				break;
 		}
 	}

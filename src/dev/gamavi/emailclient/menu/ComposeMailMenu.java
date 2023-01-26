@@ -65,40 +65,6 @@ public class ComposeMailMenu extends AbstractMenu {
 		mailService.composeAndSend(mail, recipientList);
 	}
 
-//	private void scanRecipients(Scanner scanner, List<MailRecipient> recipientList) throws Exception {
-//		do {
-//			System.out.print("Recipient(s) address ['0' to cancel, separate by semicolon ';']: ");
-//			String line = scanner.nextLine();
-//
-//			if (line.isEmpty()) {
-//				System.out.println("The mail recipient cannot be empty.");
-//				continue;
-//			}
-//			if (line.equals("0")) {
-//				throw new Exception();
-//			}
-//
-//			try {
-//				List<User> userList = userService.parseMailAddresses(line);
-//
-//				for (User user : userList) {
-//					MailRecipient recipient = new MailRecipientBuilder()
-//						.setRecipient(user)
-//						.setHasRead(false)
-//						.setType(ReceiveType.NORMAL)
-//						.build();
-//
-//					recipientList.add(recipient);
-//				}
-//			} catch (ServiceException e) {
-//				System.out.println(e.getMessage());
-//				continue;
-//			}
-//
-//			break;
-//		} while (true);
-//	}
-
 	private String scanSubject(Scanner scanner) throws Exception {
 		String subject;
 		do {

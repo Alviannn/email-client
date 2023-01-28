@@ -21,7 +21,9 @@ public class UserService extends AbstractService {
 
 	public void register(User user) throws ServiceException {
 		Optional<User> optional = userRepo.findOneById(user.getEmail());
-		optional.orElseThrow(() -> new ServiceException("Username must be unique!"));
+		if (optional.isPresent()) {
+			throw new ServiceException("Username must be unique!");
+		}
 
 		userRepo.insert(user);
 	}

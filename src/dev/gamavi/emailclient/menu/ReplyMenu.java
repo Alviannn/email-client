@@ -106,7 +106,7 @@ public class ReplyMenu extends AbstractMenu {
 
 				break;
 			} else {
-				contentBuilder.append(line);
+				contentBuilder.append(line).append("\n");
 			}
 		}
 
